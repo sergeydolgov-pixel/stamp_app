@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Печать и Подпись">
+<meta name="theme-color" content="#2a5cff">
+<meta name="description" content="Ставьте подпись и печать на PDF-документы прямо с телефона">
+<title>Печать и Подпись</title>
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%D0%9F%D0%B5%D1%87%D0%B0%D1%82%D1%8C%20%D0%B8%20%D0%9F%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D1%8C%22%2C%22short_name%22%3A%22%D0%9F%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D1%8C%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f7f6f2%22%2C%22theme_color%22%3A%22%232a5cff%22%7D">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+
+:root{
+  --bg:#f7f6f2;--surface:#fff;--surface2:#f0ede6;--border:#ddd9ce;
+  --text:#1a1916;--text2:#6b6860;--accent:#2a5cff;--accent-light:#eef1ff;
+  --danger:#e03a3a;--success:#1d9e75;--r:12px;--sh:0 2px 16px rgba(0,0,0,.09);
+  --nav-h:64px;--header-h:56px;
+}
+
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+
+/* ─── HEADER ─── */
+.header{
+  position:fixed;top:0;left:0;right:0;height:var(--header-h);
+  background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;padding:0 16px;gap:10px;z-index:100;
+  box-shadow:var(--sh);
+}
+.header-logo{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0}
+.header-title{font-size:16px;font-weight:700;flex:1}
+.header-sub{font-size:11px;color:var(--text2)}
+.header-actions{display:flex;gap:8px;margin-left:auto}
+.icon-btn{width:36px;height:36px;border:1.5px solid var(--border);border-radius:9px;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:background .15s}
+.icon-btn:hover,.icon-btn:active{background:var(--surface2)}
+.icon-btn.accent{background:var(--accent);border-color:var(--accent);color:#fff}
+.icon-btn.accent:active{background:#1a4dee}
+
+/* ─── BOTTOM NAV ─── */
+.nav{
+  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
+  background:var(--surface);border-top:1px solid var(--border);
+  display:flex;z-index:100;
+  padding-bottom:env(safe-area-inset-bottom);
+  box-shadow:0 -2px 12px rgba(0,0,0,.06);
+}
+.nav-btn{flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;transition:all .15s;position:relative}
+.nav-btn .nb-icon{font-size:22px;line-height:1}
+.nav-btn .nb-label{font-size:10px;font-weight:600;color:var(--text2)}
+.nav-btn.active .nb-label{color:var(--accent)}
+.nav-btn.active .nb-icon{filter:drop-shadow(0 0 4px rgba(42,92,255,.4))}
+.nav-btn .badge{position:absolute;top:6px;right:calc(50% - 14px);background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px;min-width:16px;text-align:center}
+
+/* ─── SCREENS ─── */
+.screen{
+  position:fixed;top:var(--header-h);bottom:var(--nav-h);left:0;right:0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  display:none;padding:16px;
+  padding-bottom:calc(env(safe-area-inset-bottom) + 16px);
+}
+.screen.active{display:block}
+
+/* ─── CARDS ─── */
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;box-shadow:var(--sh)}
+.card-header{padding:12px 14px;display:flex;align-items:center;gap:8px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.card-header .ch-icon{font-size:18px}
+.card-header .ch-title{font-size:13px;font-weight:700;flex:1}
+.card-body{padding:14px}
+
+/* ─── UPLOAD ZONE ─── */
+.upload-zone{
+  border:2px dashed var(--border);border-radius:var(--r);padding:20px 16px;
+  text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.upload-zone:active{border-color:var(--accent);background:var(--accent-light)}
+.upload-zone .uz-icon{font-size:32px;opacity:.5}
+.upload-zone .uz-title{font-size:14px;font-weight:600;color:var(--text)}
+.upload-zone .uz-sub{font-size:12px;color:var(--text2)}
+.upload-zone input{display:none}
+
+/* ─── FILE ROW ─── */
+.file-row{display:flex;align-items:center;gap:10px;padding:10px 0;min-width:0}
+.file-icon{font-size:28px;flex-shrink:0}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.file-del{width:34px;height:34px;border:1.5px solid var(--border);border-radius:8px;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--danger);flex-shrink:0}
+
+/* ─── PREVIEW IMG ─── */
+.preview-img{width:100%;max-height:90px;object-fit:contain;border-radius:8px;background:#f0f0f0;border:1px solid var(--border);margin-top:8px}
+
+/* ─── SIZE INPUTS ─── */
+.size-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.size-grid.one-col{grid-template-columns:1fr}
+.size-field label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
+.size-field input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:9px;font-size:15px;background:var(--surface);color:var(--text);-webkit-appearance:none}
+.size-field input:focus{outline:none;border-color:var(--accent)}
+
+/* ─── BUTTONS ─── */
+.btn{width:100%;padding:14px;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;letter-spacing:-.01em}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:active{background:#1a4dee;transform:scale(.98)}
+.btn-primary:disabled{background:#c0c8e8;cursor:not-allowed;transform:none}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1.5px solid var(--border)}
+.btn-secondary:active{background:var(--border)}
+.btn-process{background:none;border:1.5px dashed var(--accent);color:var(--accent);padding:11px;border-radius:var(--r);font-size:13px;font-weight:700;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;transition:background .15s}
+.btn-process:active{background:var(--accent-light)}
+
+.btn .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.btn.loading .spinner{display:block}
+.btn.loading .btn-text{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─── PDF VIEWER ─── */
+.viewer-screen{
+  position:fixed;top:var(--header-h);bottom:var(--nav-h);left:0;right:0;
+  display:none;flex-direction:column;overflow:hidden;
+}
+.viewer-screen.active{display:flex}
+
+.viewer-toolbar{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:8px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+.viewer-toolbar::-webkit-scrollbar{display:none}
+
+.mode-chip{
+  padding:7px 13px;border:1.5px solid var(--border);border-radius:20px;
+  background:none;cursor:pointer;font-size:12px;font-weight:700;
+  white-space:nowrap;transition:all .15s;flex-shrink:0;
+}
+.mode-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.page-nav{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:auto}
+.page-nav button{width:32px;height:32px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.page-nav button:disabled{opacity:.4}
+.page-nav span{font-size:12px;color:var(--text2);white-space:nowrap;min-width:40px;text-align:center}
+
+.viewer-canvas-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;position:relative;background:var(--bg)}
+.canvas-container{position:relative;display:inline-block;min-width:100%;cursor:crosshair;touch-action:none}
+#pdfCanvas{display:block;width:100%}
+#overlayLayer{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
+
+.apply-all-row{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--accent-light);border-radius:8px;flex-shrink:0}
+.apply-all-row label{font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;white-space:nowrap}
+
+/* ─── PLACEMENTS ─── */
+.placement{position:absolute;cursor:move;touch-action:none}
+.placement img{width:100%;height:100%;object-fit:contain;display:block}
+.placement .del-x{
+  position:absolute;top:-10px;right:-10px;width:22px;height:22px;
+  background:var(--danger);color:#fff;border:none;border-radius:50%;
+  cursor:pointer;font-size:12px;line-height:22px;text-align:center;
+  display:none;z-index:10;
+}
+.placement:hover .del-x,.placement.sel .del-x{display:block}
+
+/* ─── PLACEMENT LIST ─── */
+.pl-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:var(--surface2);margin-bottom:8px}
+.pl-item .pi-icon{font-size:20px;flex-shrink:0}
+.pl-item .pi-info{flex:1;font-size:13px}
+.pl-item .pi-page{font-weight:700}
+.pl-item .pi-size{color:var(--text2);font-size:12px}
+.pl-item .pi-del{background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;padding:4px;flex-shrink:0}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;text-align:center;padding:24px}
+.empty-state .es-icon{font-size:64px;opacity:.25}
+.empty-state h2{font-size:20px;font-weight:700}
+.empty-state p{font-size:14px;color:var(--text2);max-width:260px;line-height:1.5}
+
+/* ─── MODAL ─── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom) + 20px);width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.modal h2{font-size:17px;font-weight:700;margin-bottom:4px}
+.modal .modal-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
+
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.compare-box{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.compare-box .cb-label{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;padding:5px 8px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.compare-box canvas{width:100%;display:block;background:repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0/10px 10px;min-height:100px;object-fit:contain}
+
+.slider-group{margin-bottom:14px}
+.slider-group .sg-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:6px}
+.slider-group .sg-label span{color:var(--text2);font-weight:400}
+.slider-group input[type=range]{width:100%;height:6px;accent-color:var(--accent);cursor:pointer}
+.slider-hint{font-size:11px;color:var(--text2);margin-top:4px;line-height:1.4}
+
+.mode-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto}
+.mode-tabs::-webkit-scrollbar{display:none}
+.mode-tab{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:none;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.mode-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.modal-btns{display:flex;gap:10px;margin-top:16px}
+.modal-btns .btn{flex:1}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + 12px);left:16px;right:16px;
+  background:#1a1916;color:#fff;padding:13px 16px;border-radius:12px;
+  font-size:13px;font-weight:600;
+  transform:translateY(20px);opacity:0;transition:all .3s;z-index:1000;
+  text-align:center;pointer-events:none;
+}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--success)}
+.toast.error{background:var(--danger)}
+
+/* ─── DESKTOP OVERRIDE ─── */
+@media(min-width:700px){
+  .modal-overlay{align-items:center}
+  .modal{border-radius:20px;max-width:560px;max-height:80vh}
+  .screen,.viewer-screen{
+    top:var(--header-h);left:280px;
+    transition:left .2s;
+  }
+  .sidebar-desktop{
+    position:fixed;top:var(--header-h);left:0;bottom:var(--nav-h);
+    width:280px;background:var(--surface);border-right:1px solid var(--border);
+    overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;
+  }
+  .nav{display:none}
+  .screen,.viewer-screen{bottom:0}
+  .toast{left:296px;bottom:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">📄</div>
+  <div style="flex:1;min-width:0">
+    <div class="header-title">Печать и Подпись</div>
+    <div class="header-sub" id="headerSub">Подпись и печать на PDF</div>
+  </div>
+  <div class="header-actions">
+    <button class="icon-btn" id="installBtn" style="display:none" onclick="installPwa()" title="Установить приложение">⬇️</button>
+    <button class="icon-btn accent" id="exportBtnHeader" onclick="exportPdf()" disabled title="Скачать PDF">💾</button>
+  </div>
+</div>
+
+<!-- DESKTOP SIDEBAR -->
+<div class="sidebar-desktop" id="desktopSidebar" style="display:none">
+  <!-- filled by JS -->
+</div>
+
+<!-- SCREEN: ДОКУМЕНТ -->
+<div class="screen active" id="screen-doc">
+
+  <div class="card">
+    <div class="card-header">
+      <span class="ch-icon">📂</span>
+      <span class="ch-title">PDF-документ</span>
+    </div>
+    <div class="card-body">
+      <div id="docEmpty">
+        <div class="upload-zone" onclick="document.getElementById('pdfInput').click()">
+          <div class="uz-icon">📄</div>
+          <div class="uz-title">Выбрать PDF</div>
+          <div class="uz-sub">Нажмите или перетащите файл</div>
+          <input type="file" id="pdfInput" accept=".pdf">
+        </div>
+      </div>
+      <div id="docLoaded" style="display:none">
+        <div class="file-row">
+          <div class="file-icon">📄</div>
+          <div class="file-info">
+            <div class="file-name" id="pdfName">—</div>
+            <div class="file-meta" id="pdfMeta">—</div>
+          </div>
+          <button class="file-del" onclick="clearPdf()">✕</button>
+        </div>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="goToViewer()">
+          ✏️ <span class="btn-text">Расставить подписи</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="ch-icon">✍️</span>
+      <span class="ch-title">Подпись</span>
+    </div>
+    <div class="card-body">
+      <div id="sigZoneWrap">
+        <div class="upload-zone" onclick="document.getElementById('sigInput').click()">
+          <div class="uz-icon">🖊️</div>
+          <div class="uz-title">PNG с прозрачным фоном</div>
+          <div class="uz-sub">или обработайте фото ниже</div>
+          <input type="file" id="sigInput" accept="image/*">
+        </div>
+        <button class="btn-process" onclick="openProcessor('sig')">✨ Загрузить фото и убрать фон</button>
+      </div>
+      <div id="sigLoaded" style="display:none">
+        <img id="sigPreview" class="preview-img">
+        <div class="file-row" style="padding:8px 0 4px">
+          <div class="file-info"><div class="file-name" id="sigName">—</div></div>
+          <button class="file-del" onclick="clearImg('sig')">✕</button>
+        </div>
+        <button class="btn-process" onclick="openProcessor('sig')">✨ Заменить / обработать</button>
+      </div>
+      <div class="size-grid" style="margin-top:12px">
+        <div class="size-field"><label>Ширина (мм)</label><input type="number" id="sigW" value="48" min="5" max="150"></div>
+        <div class="size-field"><label>Высота (мм)</label><input type="number" id="sigH" value="24" min="3" max="100"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <span class="ch-icon">🔵</span>
+      <span class="ch-title">Печать</span>
+    </div>
+    <div class="card-body">
+      <div id="stmpZoneWrap">
+        <div class="upload-zone" onclick="document.getElementById('stmpInput').click()">
+          <div class="uz-icon">🔵</div>
+          <div class="uz-title">PNG с прозрачным фоном</div>
+          <div class="uz-sub">или обработайте фото ниже</div>
+          <input type="file" id="stmpInput" accept="image/*">
+        </div>
+        <button class="btn-process" onclick="openProcessor('stmp')">✨ Загрузить фото и убрать фон</button>
+      </div>
+      <div id="stmpLoaded" style="display:none">
+        <img id="stmpPreview" class="preview-img">
+        <div class="file-row" style="padding:8px 0 4px">
+          <div class="file-info"><div class="file-name" id="stmpName">—</div></div>
+          <button class="file-del" onclick="clearImg('stmp')">✕</button>
+        </div>
+        <button class="btn-process" onclick="openProcessor('stmp')">✨ Заменить / обработать</button>
+      </div>
+      <div class="size-grid one-col" style="margin-top:12px">
+        <div class="size-field"><label>Размер (мм)</label><input type="number" id="stmpSize" value="40" min="10" max="100"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SCREEN: VIEWER -->
+<div class="viewer-screen" id="screen-viewer">
+  <div class="viewer-toolbar">
+    <button class="mode-chip active" id="modeBtn-sig" onclick="setMode('sig')">✍️ Подпись</button>
+    <button class="mode-chip" id="modeBtn-stmp" onclick="setMode('stmp')">🔵 Печать</button>
+    <button class="mode-chip" id="modeBtn-both" onclick="setMode('both')">✍️+🔵 Оба</button>
+    <label class="apply-all-row">
+      <input type="checkbox" id="applyAllPages" style="accent-color:var(--accent)">
+      <span>Все стр.</span>
+    </label>
+    <div class="page-nav">
+      <button onclick="changePage(-1)" id="prevBtn">◀</button>
+      <span id="pageInfo">1/1</span>
+      <button onclick="changePage(1)" id="nextBtn">▶</button>
+    </div>
+  </div>
+  <div class="viewer-canvas-wrap" id="canvasWrap">
+    <div class="canvas-container" id="canvasContainer">
+      <canvas id="pdfCanvas"></canvas>
+      <div id="overlayLayer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: РАССТАНОВКА -->
+<div class="screen" id="screen-list">
+  <div id="listEmpty" style="display:none">
+    <div class="empty-state">
+      <div class="es-icon">📍</div>
+      <h2>Нет расстановки</h2>
+      <p>Откройте документ и кликните по странице чтобы поставить подпись или печать</p>
+    </div>
+  </div>
+  <div id="listItems"></div>
+  <div id="listHasItems" style="display:none">
+    <button class="btn btn-secondary" style="margin-top:4px" onclick="clearPlacements()">🗑 Очистить всё</button>
+  </div>
+</div>
+
+<!-- SCREEN: ЭКСПОРТ -->
+<div class="screen" id="screen-export">
+  <div class="card">
+    <div class="card-header"><span class="ch-icon">💾</span><span class="ch-title">Скачать PDF</span></div>
+    <div class="card-body">
+      <div id="exportReady" style="display:none">
+        <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.5">
+          Все слои будут объединены.<br>Подписи и печати станут частью документа.
+        </div>
+        <div id="exportSummary" style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;line-height:1.8"></div>
+        <button class="btn btn-primary" id="exportBtn" onclick="exportPdf()">
+          <div class="spinner"></div>
+          <span class="btn-text">⬇️ Скачать PDF</span>
+        </button>
+      </div>
+      <div id="exportNotReady">
+        <div class="empty-state" style="min-height:30vh">
+          <div class="es-icon">💾</div>
+          <h2>Не готово</h2>
+          <p>Загрузите PDF, подпись или печать, затем расставьте их на страницах</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="nav">
+  <button class="nav-btn active" id="nav-doc" onclick="switchTab('doc')">
+    <span class="nb-icon">📄</span>
+    <span class="nb-label">Документ</span>
+  </button>
+  <button class="nav-btn" id="nav-viewer" onclick="switchTab('viewer')">
+    <span class="nb-icon">✏️</span>
+    <span class="nb-label">Редактор</span>
+  </button>
+  <button class="nav-btn" id="nav-list" onclick="switchTab('list')">
+    <span class="nb-icon">📍</span>
+    <span class="nb-label">Расстановка</span>
+    <span class="badge" id="listBadge" style="display:none">0</span>
+  </button>
+  <button class="nav-btn" id="nav-export" onclick="switchTab('export')">
+    <span class="nb-icon">💾</span>
+    <span class="nb-label">Сохранить</span>
+  </button>
+</div>
+
+<!-- MODAL: ОБРАБОТКА ФОТО -->
+<div class="modal-overlay" id="processorModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2>✨ Убрать фон с фото</h2>
+    <p class="modal-sub">Загрузите фото подписи или печати — приложение уберёт фон и сохранит PNG</p>
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tab-auto" onclick="setProcessMode('auto')">🪄 Авто</button>
+      <button class="mode-tab" id="tab-light" onclick="setProcessMode('light')">☀️ Светлый фон</button>
+      <button class="mode-tab" id="tab-dark" onclick="setProcessMode('dark')">🌑 Тёмный фон</button>
+    </div>
+    <div class="slider-group">
+      <div class="sg-label">Порог удаления <span id="threshVal">30</span></div>
+      <input type="range" id="threshSlider" min="5" max="120" value="30" oninput="updateThresh(this.value)">
+      <div class="slider-hint">Меньше — только фон. Больше — захватывает больше пикселей.</div>
+    </div>
+    <div class="slider-group">
+      <div class="sg-label">Смягчение краёв <span id="featherVal">2</span>px</div>
+      <input type="range" id="featherSlider" min="0" max="8" value="2" oninput="updateFeather(this.value)">
+    </div>
+    <label style="display:block;margin-bottom:14px">
+      <button class="btn-process" onclick="document.getElementById('procInput').click()">📁 Выбрать фото</button>
+      <input type="file" id="procInput" accept="image/*" style="display:none" onchange="loadProcImage(this)">
+      <div id="procFileName" style="font-size:12px;color:var(--text2);margin-top:6px;text-align:center">файл не выбран</div>
+    </label>
+    <div class="compare-row">
+      <div class="compare-box"><div class="cb-label">Оригинал</div><canvas id="origCanvas"></canvas></div>
+      <div class="compare-box"><div class="cb-label">Результат</div><canvas id="resultCanvas"></canvas></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-secondary" onclick="closeProcessor()">Отмена</button>
+      <button class="btn btn-primary" id="applyProcBtn" onclick="applyProcessed()" disabled>✅ Использовать</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ── STATE ──
+let pdfDoc=null,pdfBytes=null,currentPage=1,totalPages=1,scale=2;
+let mode='sig',placements=[],placementIdCounter=0;
+let sigDataUrl=null,stmpDataUrl=null;
+let canvasW=0,canvasH=0,canvasDisplayW=0;
+const MM_TO_PT=2.8346;
+const LS={SIG:'sp_sig',SIGN:'sp_sig_name',STMP:'sp_stmp',STMPN:'sp_stmp_name'};
+
+// ── UTILS ──
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+type;
+  clearTimeout(t._t); t._t=setTimeout(()=>t.className='toast',3000);
+}
+function dataUrlToU8(d){
+  const b=atob(d.split(',')[1]),a=new Uint8Array(b.length);
+  for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);
+  return a;
+}
+function saveLS(k,nk,d,n){try{localStorage.setItem(k,d);localStorage.setItem(nk,n)}catch(e){}}
+function loadLS(k,nk,type){
+  const d=localStorage.getItem(k); if(!d)return;
+  const n=localStorage.getItem(nk)||'сохранено';
+  applyImg(type,d,n+' ✓');
+}
+
+// ── TABS ──
+let activeTab='doc';
+function switchTab(tab){
+  activeTab=tab;
+  document.querySelectorAll('.screen,.viewer-screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const s=document.getElementById('screen-'+tab)||document.getElementById('screen-viewer');
+  const screenId=tab==='viewer'?'screen-viewer':'screen-'+tab;
+  document.getElementById(screenId).classList.add('active');
+  const nb=document.getElementById('nav-'+tab);
+  if(nb)nb.classList.add('active');
+  if(tab==='list')updateListScreen();
+  if(tab==='export')updateExportScreen();
+  if(tab==='viewer'&&pdfDoc)renderPage();
+}
+function goToViewer(){switchTab('viewer')}
+
+// ── PDF LOAD ──
+document.getElementById('pdfInput').addEventListener('change',async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  toast('Загружаю документ…');
+  const raw=new Uint8Array(await f.arrayBuffer());
+  pdfBytes=raw;
+  try{ pdfDoc=await pdfjsLib.getDocument({data:raw.slice()}).promise; }
+  catch(err){ toast('Ошибка загрузки PDF: '+err.message,'error'); return; }
+  totalPages=pdfDoc.numPages; currentPage=1; placements=[];
+  document.getElementById('pdfName').textContent=f.name;
+  document.getElementById('pdfMeta').textContent=(f.size/1024).toFixed(0)+' KB · '+totalPages+' стр.';
+  document.getElementById('docEmpty').style.display='none';
+  document.getElementById('docLoaded').style.display='block';
+  document.getElementById('headerSub').textContent=f.name;
+  updateBadge(); updateExportBtn();
+  toast('Документ загружен','success');
+});
+
+function clearPdf(){
+  pdfDoc=null;pdfBytes=null;placements=[];currentPage=1;totalPages=1;
+  document.getElementById('docEmpty').style.display='block';
+  document.getElementById('docLoaded').style.display='none';
+  document.getElementById('headerSub').textContent='Подпись и печать на PDF';
+  document.getElementById('pdfInput').value='';
+  updateBadge(); updateExportBtn(); updateListScreen();
+}
+
+// ── IMAGES ──
+function applyImg(type,dataUrl,name){
+  if(type==='sig'){
+    sigDataUrl=dataUrl;
+    document.getElementById('sigPreview').src=dataUrl;
+    document.getElementById('sigName').textContent=name;
+    document.getElementById('sigZoneWrap').style.display='none';
+    document.getElementById('sigLoaded').style.display='block';
+  } else {
+    stmpDataUrl=dataUrl;
+    document.getElementById('stmpPreview').src=dataUrl;
+    document.getElementById('stmpName').textContent=name;
+    document.getElementById('stmpZoneWrap').style.display='none';
+    document.getElementById('stmpLoaded').style.display='block';
+  }
+  updateExportBtn();
+}
+
+function loadImgFile(inputId,type){
+  const f=document.getElementById(inputId).files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const d=e.target.result;
+    saveLS(type==='sig'?LS.SIG:LS.STMP, type==='sig'?LS.SIGN:LS.STMPN, d, f.name);
+    applyImg(type,d,f.name+' ✓ сохранено');
+    toast('Загружено и сохранено','success');
+  };
+  r.readAsDataURL(f);
+}
+document.getElementById('sigInput').addEventListener('change',()=>loadImgFile('sigInput','sig'));
+document.getElementById('stmpInput').addEventListener('change',()=>loadImgFile('stmpInput','stmp'));
+
+function clearImg(type){
+  if(type==='sig'){
+    sigDataUrl=null;
+    localStorage.removeItem(LS.SIG);localStorage.removeItem(LS.SIGN);
+    document.getElementById('sigZoneWrap').style.display='block';
+    document.getElementById('sigLoaded').style.display='none';
+    document.getElementById('sigInput').value='';
+  } else {
+    stmpDataUrl=null;
+    localStorage.removeItem(LS.STMP);localStorage.removeItem(LS.STMPN);
+    document.getElementById('stmpZoneWrap').style.display='block';
+    document.getElementById('stmpLoaded').style.display='none';
+    document.getElementById('stmpInput').value='';
+  }
+  updateExportBtn();
+}
+
+// ── VIEWER ──
+async function renderPage(){
+  if(!pdfDoc)return;
+  const page=await pdfDoc.getPage(currentPage);
+  const wrap=document.getElementById('canvasWrap');
+  const availW=wrap.clientWidth-8;
+  const vp0=page.getViewport({scale:1});
+  scale=availW/vp0.width;
+  const vp=page.getViewport({scale});
+  const canvas=document.getElementById('pdfCanvas');
+  canvas.width=vp.width; canvas.height=vp.height;
+  canvas.style.width='100%'; canvas.style.height='auto';
+  canvasW=vp.width; canvasH=vp.height;
+  canvasDisplayW=availW;
+  await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
+  document.getElementById('pageInfo').textContent=currentPage+'/'+totalPages;
+  document.getElementById('prevBtn').disabled=currentPage<=1;
+  document.getElementById('nextBtn').disabled=currentPage>=totalPages;
+  renderPlacements();
+}
+
+async function changePage(d){
+  const n=currentPage+d;
+  if(n<1||n>totalPages)return;
+  currentPage=n; await renderPage();
+}
+
+function setMode(m){
+  mode=m;
+  document.querySelectorAll('.mode-chip').forEach(b=>b.classList.remove('active'));
+  document.getElementById('modeBtn-'+m).classList.add('active');
+}
+
+// ── CLICK / TOUCH ON CANVAS ──
+const cc=document.getElementById('canvasContainer');
+function getRelPos(e){
+  const rect=document.getElementById('pdfCanvas').getBoundingClientRect();
+  const cx=e.touches?e.touches[0].clientX:e.clientX;
+  const cy=e.touches?e.touches[0].clientY:e.clientY;
+  return{x:(cx-rect.left)/rect.width, y:(cy-rect.top)/rect.height};
+}
+
+cc.addEventListener('click',handleCanvasClick);
+cc.addEventListener('touchend',e=>{
+  if(e.target.classList.contains('del-x'))return;
+  e.preventDefault();
+  handleCanvasClick({clientX:e.changedTouches[0].clientX,clientY:e.changedTouches[0].clientY});
+},{passive:false});
+
+function handleCanvasClick(e){
+  if(!pdfDoc)return;
+  if(e.target&&(e.target.classList.contains('placement')||e.target.closest('.placement')))return;
+  const pos=getRelPos(e);
+  const allPages=document.getElementById('applyAllPages').checked;
+  const pages=allPages?Array.from({length:totalPages},(_,i)=>i+1):[currentPage];
+  if(mode==='sig'||mode==='both'){
+    if(!sigDataUrl){toast('Сначала загрузите подпись','error');return}
+    const wMm=parseFloat(document.getElementById('sigW').value);
+    const hMm=parseFloat(document.getElementById('sigH').value);
+    pages.forEach(pg=>placements.push({type:'sig',page:pg,xPct:pos.x,yPct:pos.y,wMm,hMm,id:++placementIdCounter}));
+  }
+  if(mode==='stmp'||mode==='both'){
+    if(!stmpDataUrl){toast('Сначала загрузите печать','error');return}
+    const sz=parseFloat(document.getElementById('stmpSize').value);
+    const ox=mode==='both'?0.04:0;
+    pages.forEach(pg=>placements.push({type:'stmp',page:pg,xPct:pos.x+ox,yPct:pos.y,wMm:sz,hMm:sz,id:++placementIdCounter}));
+  }
+  renderPlacements(); updateBadge(); updateExportBtn();
+  if(allPages)toast('Добавлено на '+pages.length+' страниц','success');
+}
+
+function renderPlacements(){
+  const layer=document.getElementById('overlayLayer');
+  layer.innerHTML='';
+  const rect=document.getElementById('pdfCanvas').getBoundingClientRect();
+  const dw=rect.width||canvasDisplayW;
+  const dh=rect.height||(canvasH*(dw/canvasW));
+  layer.style.width=dw+'px'; layer.style.height=dh+'px';
+
+  placements.filter(p=>p.page===currentPage).forEach(p=>{
+    const ptPerMm=2.8346;
+    const pageWPt=canvasW/scale;
+    const pageHPt=canvasH/scale;
+    const wpx=(p.wMm*ptPerMm/pageWPt)*dw;
+    const hpx=(p.hMm*ptPerMm/pageHPt)*dh;
+    const left=p.xPct*dw-wpx/2;
+    const top=p.yPct*dh-hpx/2;
+
+    const div=document.createElement('div');
+    div.className='placement';
+    div.style.cssText=`left:${left}px;top:${top}px;width:${wpx}px;height:${hpx}px;`;
+    const img=document.createElement('img');
+    img.src=p.type==='sig'?sigDataUrl:stmpDataUrl;
+    div.appendChild(img);
+    const del=document.createElement('button');
+    del.className='del-x'; del.textContent='✕';
+    del.addEventListener('click',ev=>{ev.stopPropagation();removePlacement(p.id);});
+    del.addEventListener('touchend',ev=>{ev.stopPropagation();ev.preventDefault();removePlacement(p.id);});
+    div.appendChild(del);
+    makeDraggable(div,p,dw,dh);
+    layer.appendChild(div);
+  });
+}
+
+function makeDraggable(el,pl,dw,dh){
+  let sx,sy,sl,st;
+  function start(cx,cy){
+    sx=cx;sy=cy;
+    sl=parseFloat(el.style.left);st=parseFloat(el.style.top);
+    el.classList.add('sel');
+  }
+  function move(cx,cy){
+    const nl=sl+(cx-sx),nt=st+(cy-sy);
+    el.style.left=nl+'px';el.style.top=nt+'px';
+    const wpx=parseFloat(el.style.width),hpx=parseFloat(el.style.height);
+    pl.xPct=(nl+wpx/2)/dw; pl.yPct=(nt+hpx/2)/dh;
+  }
+  function end(){el.classList.remove('sel');}
+  el.addEventListener('mousedown',e=>{if(e.target.classList.contains('del-x'))return;e.preventDefault();start(e.clientX,e.clientY);
+    const mm=ev=>move(ev.clientX,ev.clientY);
+    const mu=()=>{end();document.removeEventListener('mousemove',mm);document.removeEventListener('mouseup',mu);};
+    document.addEventListener('mousemove',mm);document.addEventListener('mouseup',mu);
+  });
+  el.addEventListener('touchstart',e=>{if(e.target.classList.contains('del-x'))return;e.preventDefault();start(e.touches[0].clientX,e.touches[0].clientY);
+    const tm=ev=>{ev.preventDefault();move(ev.touches[0].clientX,ev.touches[0].clientY);};
+    const te=()=>{end();el.removeEventListener('touchmove',tm);el.removeEventListener('touchend',te);};
+    el.addEventListener('touchmove',tm,{passive:false});el.addEventListener('touchend',te);
+  },{passive:false});
+}
+
+function removePlacement(id){
+  placements=placements.filter(p=>p.id!==id);
+  renderPlacements(); updateBadge(); updateExportBtn(); updateListScreen();
+}
+
+function clearPlacements(){
+  placements=[];
+  renderPlacements(); updateBadge(); updateExportBtn(); updateListScreen();
+}
+
+// ── LIST SCREEN ──
+function updateListScreen(){
+  const empty=document.getElementById('listEmpty');
+  const items=document.getElementById('listItems');
+  const has=document.getElementById('listHasItems');
+  if(placements.length===0){
+    empty.style.display='block'; items.innerHTML=''; has.style.display='none';
+  } else {
+    empty.style.display='none'; has.style.display='block';
+    items.innerHTML=placements.map(p=>`
+      <div class="pl-item">
+        <div class="pi-icon">${p.type==='sig'?'✍️':'🔵'}</div>
+        <div class="pi-info">
+          <span class="pi-page">Стр. ${p.page}</span>
+          <span class="pi-size"> · ${p.wMm}×${p.hMm} мм</span>
+        </div>
+        <button class="pi-del" onclick="removePlacement(${p.id})">✕</button>
+      </div>
+    `).join('');
+  }
+}
+
+// ── BADGE ──
+function updateBadge(){
+  const b=document.getElementById('listBadge');
+  if(placements.length>0){b.style.display='block';b.textContent=placements.length;}
+  else b.style.display='none';
+}
+
+// ── EXPORT ──
+function updateExportBtn(){
+  const ready=pdfDoc&&(sigDataUrl||stmpDataUrl)&&placements.length>0;
+  ['exportBtn','exportBtnHeader'].forEach(id=>{
+    const btn=document.getElementById(id);
+    if(btn)btn.disabled=!ready;
+  });
+  document.getElementById('exportReady').style.display=ready?'block':'none';
+  document.getElementById('exportNotReady').style.display=ready?'none':'block';
+}
+
+function updateExportScreen(){
+  const sigC=placements.filter(p=>p.type==='sig').length;
+  const stC=placements.filter(p=>p.type==='stmp').length;
+  document.getElementById('exportSummary').innerHTML=`
+    📄 <b>${document.getElementById('pdfName').textContent||'—'}</b><br>
+    ✍️ Подписей: <b>${sigC}</b> &nbsp;·&nbsp; 🔵 Печатей: <b>${stC}</b><br>
+    📃 Страниц в документе: <b>${totalPages}</b>
+  `;
+}
+
+function loadImageElement(src){
+  return new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src;});
+}
+
+async function exportPdf(){
+  const btn=document.getElementById('exportBtn');
+  const btnH=document.getElementById('exportBtnHeader');
+  [btn,btnH].forEach(b=>{if(b){b.classList.add('loading');b.disabled=true;}});
+  try{
+    const {PDFDocument}=PDFLib;
+    const outDoc=await PDFDocument.create();
+    const sigImg=sigDataUrl?await loadImageElement(sigDataUrl):null;
+    const stmpImg=stmpDataUrl?await loadImageElement(stmpDataUrl):null;
+    const exportScale=3.0;
+    const origDoc=await PDFDocument.load(pdfBytes,{ignoreEncryption:true});
+    const origPages=origDoc.getPages();
+    for(let pn=1;pn<=totalPages;pn++){
+      const btnText=btn?.querySelector('.btn-text');
+      if(btnText)btnText.textContent=`Страница ${pn}/${totalPages}…`;
+      const pdfPage=await pdfDoc.getPage(pn);
+      const vp=pdfPage.getViewport({scale:exportScale});
+      const oc=document.createElement('canvas');
+      oc.width=vp.width;oc.height=vp.height;
+      const ctx=oc.getContext('2d');
+      await pdfPage.render({canvasContext:ctx,viewport:vp}).promise;
+      const pp=placements.filter(p=>p.page===pn);
+      for(const pl of pp){
+        const im=pl.type==='sig'?sigImg:stmpImg; if(!im)continue;
+        const ptPerMm=2.8346;
+        const pwPt=vp.width/exportScale,phPt=vp.height/exportScale;
+        const wpx=(pl.wMm*ptPerMm/pwPt)*vp.width;
+        const hpx=(pl.hMm*ptPerMm/phPt)*vp.height;
+        ctx.drawImage(im,pl.xPct*vp.width-wpx/2,pl.yPct*vp.height-hpx/2,wpx,hpx);
+      }
+      const png=dataUrlToU8(oc.toDataURL('image/png'));
+      const emb=await outDoc.embedPng(png);
+      const{width:ow,height:oh}=origPages[pn-1].getSize();
+      const np=outDoc.addPage([ow,oh]);
+      np.drawImage(emb,{x:0,y:0,width:ow,height:oh});
+    }
+    const out=await outDoc.save();
+    const blob=new Blob([out],{type:'application/pdf'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download='подписан_'+(document.getElementById('pdfName').textContent||'doc.pdf');
+    a.click(); URL.revokeObjectURL(url);
+    toast('PDF сохранён — слои объединены!','success');
+  }catch(err){toast('Ошибка: '+err.message,'error');console.error(err);}
+  [btn,btnH].forEach(b=>{
+    if(b){b.classList.remove('loading');b.disabled=false;
+      const t=b.querySelector('.btn-text');if(t)t.textContent=b===btnH?'💾':'⬇️ Скачать PDF';
+    }
+  });
+}
+
+// ── BG REMOVAL ──
+let procTarget='sig',procMode='auto',procThresh=30,procFeather=2;
+let procOrig=null,procW=0,procH=0,procReady=false;
+
+function openProcessor(t){
+  procTarget=t; procReady=false;
+  ['origCanvas','resultCanvas'].forEach(id=>{const c=document.getElementById(id);c.width=200;c.height=100;c.getContext('2d').clearRect(0,0,200,100);});
+  document.getElementById('procFileName').textContent='файл не выбран';
+  document.getElementById('applyProcBtn').disabled=true;
+  document.getElementById('processorModal').classList.add('open');
+}
+function closeProcessor(){document.getElementById('processorModal').classList.remove('open');}
+function setProcessMode(m){
+  procMode=m;
+  document.querySelectorAll('.mode-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+m).classList.add('active');
+  if(procReady)runBgRemove();
+}
+function updateThresh(v){procThresh=+v;document.getElementById('threshVal').textContent=v;if(procReady)runBgRemove();}
+function updateFeather(v){procFeather=+v;document.getElementById('featherVal').textContent=v;if(procReady)runBgRemove();}
+
+function loadProcImage(input){
+  const f=input.files[0]; if(!f)return;
+  document.getElementById('procFileName').textContent=f.name;
+  const r=new FileReader();
+  r.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const mW=300,mH=240;
+      let dw=img.width,dh=img.height;
+      if(dw>mW){dh=dh*mW/dw;dw=mW;} if(dh>mH){dw=dw*mH/dh;dh=mH;}
+      dw=Math.round(dw);dh=Math.round(dh);
+      const oc=document.getElementById('origCanvas');
+      oc.width=dw;oc.height=dh;
+      const ctx=oc.getContext('2d');ctx.drawImage(img,0,0,dw,dh);
+      procOrig=ctx.getImageData(0,0,dw,dh);procW=dw;procH=dh;procReady=true;
+      runBgRemove();
+    };
+    img.src=e.target.result;
+  };
+  r.readAsDataURL(f);
+}
+
+function cdist(r1,g1,b1,r2,g2,b2){return Math.sqrt((r1-r2)**2+(g1-g2)**2+(b1-b2)**2);}
+
+function runBgRemove(){
+  if(!procOrig)return;
+  const d=new Uint8ClampedArray(procOrig.data),w=procW,h=procH;
+  function px(x,y){const i=(y*w+x)*4;return[d[i],d[i+1],d[i+2]];}
+  const corners=[px(0,0),px(w-1,0),px(0,h-1),px(w-1,h-1)];
+  let br,bg,bb;
+  if(procMode==='light'){br=255;bg=255;bb=255;}
+  else if(procMode==='dark'){br=0;bg=0;bb=0;}
+  else{br=Math.round(corners.reduce((s,c)=>s+c[0],0)/4);bg=Math.round(corners.reduce((s,c)=>s+c[1],0)/4);bb=Math.round(corners.reduce((s,c)=>s+c[2],0)/4);}
+  const alpha=new Float32Array(w*h).fill(255);
+  for(let i=0;i<w*h;i++){
+    const di=i*4,dist=cdist(d[di],d[di+1],d[di+2],br,bg,bb);
+    if(dist<procThresh)alpha[i]=0;
+    else if(dist<procThresh+20)alpha[i]=Math.round(((dist-procThresh)/20)*255);
+  }
+  const vis=new Uint8Array(w*h),q=[];
+  for(let x=0;x<w;x++){if(alpha[x]===0){q.push(x);vis[x]=1;}if(alpha[(h-1)*w+x]===0){q.push((h-1)*w+x);vis[(h-1)*w+x]=1;}}
+  for(let y=0;y<h;y++){if(alpha[y*w]===0){q.push(y*w);vis[y*w]=1;}if(alpha[y*w+w-1]===0){q.push(y*w+w-1);vis[y*w+w-1]=1;}}
+  const bgA=new Uint8Array(w*h);
+  let qi=0;
+  while(qi<q.length){
+    const idx=q[qi++];bgA[idx]=1;
+    const x=idx%w,y=Math.floor(idx/w);
+    [[x-1,y],[x+1,y],[x,y-1],[x,y+1]].forEach(([nx,ny])=>{
+      if(nx>=0&&nx<w&&ny>=0&&ny<h){const ni=ny*w+nx;if(!vis[ni]&&alpha[ni]<255){vis[ni]=1;q.push(ni);}}
+    });
+  }
+  const out=new Uint8ClampedArray(d);
+  for(let i=0;i<w*h;i++)if(bgA[i])out[i*4+3]=Math.round(alpha[i]);
+  if(procFeather>0){
+    const f=procFeather,bl=new Float32Array(w*h);
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+      let s=0,c=0;
+      for(let dy=-f;dy<=f;dy++)for(let dx=-f;dx<=f;dx++){const nx=x+dx,ny=y+dy;if(nx>=0&&nx<w&&ny>=0&&ny<h){s+=out[(ny*w+nx)*4+3];c++;}}
+      bl[y*w+x]=s/c;
+    }
+    for(let i=0;i<w*h;i++)out[i*4+3]=Math.round(bl[i]);
+  }
+  const rc=document.getElementById('resultCanvas');
+  rc.width=w;rc.height=h;
+  rc.getContext('2d').putImageData(new ImageData(out,w,h),0,0);
+  document.getElementById('applyProcBtn').disabled=false;
+}
+
+function applyProcessed(){
+  const rc=document.getElementById('resultCanvas'); if(!rc.width)return;
+  const d=rc.toDataURL('image/png');
+  const rawName=document.getElementById('procFileName').textContent||'обработанное';
+  const name=rawName.replace(/\.[^.]+$/,'')+'.png';
+  const lsKey=procTarget==='sig'?LS.SIG:LS.STMP;
+  const lsNKey=procTarget==='sig'?LS.SIGN:LS.STMPN;
+  saveLS(lsKey,lsNKey,d,name);
+  applyImg(procTarget,d,name+' ✓ сохранено');
+  closeProcessor();
+  toast('Фон убран! Изображение сохранено.','success');
+}
+
+// ── PWA ──
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferredPrompt=e;
+  document.getElementById('installBtn').style.display='flex';
+});
+function installPwa(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBtn').style.display='none';});
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded',()=>{
+  loadLS(LS.SIG,LS.SIGN,'sig');
+  loadLS(LS.STMP,LS.STMPN,'stmp');
+  if(sigDataUrl||stmpDataUrl) toast('Подпись и печать загружены из памяти','success');
+  // Desktop: show sidebar
+  if(window.innerWidth>=700){
+    document.getElementById('desktopSidebar').style.display='flex';
+  }
+});
+
+// Resize — re-render
+window.addEventListener('resize',()=>{if(pdfDoc&&activeTab==='viewer')renderPage();});
+
+// Service Worker для PWA
+if('serviceWorker' in navigator){
+  const sw=`
+    const V='sp-v1';
+    self.addEventListener('install',e=>e.waitUntil(caches.open(V).then(c=>c.addAll(['.']))));
+    self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
+  `;
+  const blob=new Blob([sw],{type:'application/javascript'});
+  const url=URL.createObjectURL(blob);
+  navigator.serviceWorker.register(url).catch(()=>{});
+}
+</script>
+</body>
+</html>
