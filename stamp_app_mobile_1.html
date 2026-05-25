@@ -9,7 +9,7 @@
 <meta name="theme-color" content="#2a5cff">
 <meta name="description" content="Ставьте подпись и печать на PDF-документы прямо с телефона">
 <title>Печать и Подпись</title>
-<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%D0%9F%D0%B5%D1%87%D0%B0%D1%82%D1%8C%20%D0%B8%20%D0%9F%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D1%8C%22%2C%22short_name%22%3A%22%D0%9F%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D1%8C%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f7f6f2%22%2C%22theme_color%22%3A%22%232a5cff%22%7D">
+<link rel="manifest" href="manifest.json">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
@@ -953,6 +953,11 @@ function installPwa(){
   deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBtn').style.display='none';});
 }
 
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
 // ── INIT ──
 window.addEventListener('DOMContentLoaded',()=>{
   loadLS(LS.SIG,LS.SIGN,'sig');
@@ -967,17 +972,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 // Resize — re-render
 window.addEventListener('resize',()=>{if(pdfDoc&&activeTab==='viewer')renderPage();});
 
-// Service Worker для PWA
-if('serviceWorker' in navigator){
-  const sw=`
-    const V='sp-v1';
-    self.addEventListener('install',e=>e.waitUntil(caches.open(V).then(c=>c.addAll(['.']))));
-    self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request))));
-  `;
-  const blob=new Blob([sw],{type:'application/javascript'});
-  const url=URL.createObjectURL(blob);
-  navigator.serviceWorker.register(url).catch(()=>{});
-}
+
 </script>
 </body>
-</html> 
+</html>
