@@ -113,6 +113,17 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .dp-thumb .dp-num{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,.6);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;line-height:1.4}
 .dp-thumb .dp-del{position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--danger);color:#fff;border:none;border-radius:50%;font-size:10px;line-height:18px;text-align:center;cursor:pointer;padding:0}
 
+/* ─── SIGNATURE/STAMP LIBRARY ─── */
+.lib-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.lib-strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin-bottom:2px}
+.lib-strip::-webkit-scrollbar{display:none}
+.lib-thumb{position:relative;flex-shrink:0;width:60px;height:60px;border-radius:12px;overflow:hidden;
+  border:2px solid var(--border);background:var(--surface2);cursor:pointer;transition:border-color .15s}
+.lib-thumb.active{border-color:var(--accent)}
+.lib-thumb img{width:100%;height:100%;object-fit:contain;display:block;padding:5px;box-sizing:border-box}
+.lib-thumb .lib-del{position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:var(--danger);
+  color:#fff;border:none;border-radius:50%;font-size:10px;line-height:18px;text-align:center;cursor:pointer;padding:0;z-index:2}
+
 /* ─── FILE ROW ─── */
 .file-row{display:flex;align-items:center;gap:10px;padding:10px 0;min-width:0}
 .file-icon{font-size:20px;flex-shrink:0;width:38px;height:38px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center}
@@ -368,6 +379,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       <span class="ch-title" data-i18n="cardSigTitle">Подпись</span>
     </div>
     <div class="card-body">
+      <div id="sigLibWrap" style="display:none">
+        <div class="lib-label" data-i18n="libLabelSig">📚 Библиотека подписей</div>
+        <div class="lib-strip" id="sigLibStrip"></div>
+      </div>
       <div id="sigZoneWrap">
         <div class="upload-zone" onclick="document.getElementById('sigInput').click()">
           <div class="uz-icon">🖊️</div>
@@ -398,6 +413,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
       <span class="ch-title" data-i18n="cardStampTitle">Печать</span>
     </div>
     <div class="card-body">
+      <div id="stmpLibWrap" style="display:none">
+        <div class="lib-label" data-i18n="libLabelStamp">📚 Библиотека печатей</div>
+        <div class="lib-strip" id="stmpLibStrip"></div>
+      </div>
       <div id="stmpZoneWrap">
         <div class="upload-zone" onclick="document.getElementById('stmpInput').click()">
           <div class="uz-icon">🔵</div>
@@ -651,7 +670,10 @@ const I18N = {
     "docPhotosHint": "Страниц отсканировано:",
     "btnAddPage": "➕ Ещё страница",
     "btnDocPhotosDone": "✅ Готово — создать PDF",
-    "scannedDocName": "Отсканированный документ"
+    "scannedDocName": "Отсканированный документ",
+    "libLabelSig": "📚 Библиотека подписей",
+    "libLabelStamp": "📚 Библиотека печатей",
+    "toastLibSelected": "Выбрано из библиотеки"
   },
   "en": {
     "navDoc": "Document",
@@ -729,7 +751,10 @@ const I18N = {
     "docPhotosHint": "Pages scanned:",
     "btnAddPage": "➕ Add page",
     "btnDocPhotosDone": "✅ Done — create PDF",
-    "scannedDocName": "Scanned document"
+    "scannedDocName": "Scanned document",
+    "libLabelSig": "📚 Signature library",
+    "libLabelStamp": "📚 Stamp library",
+    "toastLibSelected": "Selected from library"
   },
   "fr": {
     "navDoc": "Document",
@@ -807,7 +832,10 @@ const I18N = {
     "docPhotosHint": "Pages scannées :",
     "btnAddPage": "➕ Ajouter une page",
     "btnDocPhotosDone": "✅ Terminé — créer le PDF",
-    "scannedDocName": "Document scanné"
+    "scannedDocName": "Document scanné",
+    "libLabelSig": "📚 Bibliothèque de signatures",
+    "libLabelStamp": "📚 Bibliothèque de cachets",
+    "toastLibSelected": "Sélectionné depuis la bibliothèque"
   },
   "de": {
     "navDoc": "Dokument",
@@ -885,7 +913,10 @@ const I18N = {
     "docPhotosHint": "Gescannte Seiten:",
     "btnAddPage": "➕ Seite hinzufügen",
     "btnDocPhotosDone": "✅ Fertig — PDF erstellen",
-    "scannedDocName": "Gescanntes Dokument"
+    "scannedDocName": "Gescanntes Dokument",
+    "libLabelSig": "📚 Unterschriften-Bibliothek",
+    "libLabelStamp": "📚 Stempel-Bibliothek",
+    "toastLibSelected": "Aus der Bibliothek ausgewählt"
   },
   "es": {
     "navDoc": "Documento",
@@ -963,7 +994,10 @@ const I18N = {
     "docPhotosHint": "Páginas escaneadas:",
     "btnAddPage": "➕ Añadir página",
     "btnDocPhotosDone": "✅ Listo — crear PDF",
-    "scannedDocName": "Documento escaneado"
+    "scannedDocName": "Documento escaneado",
+    "libLabelSig": "📚 Biblioteca de firmas",
+    "libLabelStamp": "📚 Biblioteca de sellos",
+    "toastLibSelected": "Seleccionado de la biblioteca"
   },
   "it": {
     "navDoc": "Documento",
@@ -1041,7 +1075,10 @@ const I18N = {
     "docPhotosHint": "Pagine scansionate:",
     "btnAddPage": "➕ Aggiungi pagina",
     "btnDocPhotosDone": "✅ Fatto — crea PDF",
-    "scannedDocName": "Documento scansionato"
+    "scannedDocName": "Documento scansionato",
+    "libLabelSig": "📚 Libreria firme",
+    "libLabelStamp": "📚 Libreria timbri",
+    "toastLibSelected": "Selezionato dalla libreria"
   },
   "pt": {
     "navDoc": "Documento",
@@ -1119,7 +1156,10 @@ const I18N = {
     "docPhotosHint": "Páginas digitalizadas:",
     "btnAddPage": "➕ Adicionar página",
     "btnDocPhotosDone": "✅ Concluído — criar PDF",
-    "scannedDocName": "Documento digitalizado"
+    "scannedDocName": "Documento digitalizado",
+    "libLabelSig": "📚 Biblioteca de assinaturas",
+    "libLabelStamp": "📚 Biblioteca de carimbos",
+    "toastLibSelected": "Selecionado da biblioteca"
   },
   "uk": {
     "navDoc": "Документ",
@@ -1197,7 +1237,10 @@ const I18N = {
     "docPhotosHint": "Сторінок відскановано:",
     "btnAddPage": "➕ Ще сторінка",
     "btnDocPhotosDone": "✅ Готово — створити PDF",
-    "scannedDocName": "Відсканований документ"
+    "scannedDocName": "Відсканований документ",
+    "libLabelSig": "📚 Бібліотека підписів",
+    "libLabelStamp": "📚 Бібліотека печаток",
+    "toastLibSelected": "Обрано з бібліотеки"
   },
   "pl": {
     "navDoc": "Dokument",
@@ -1275,7 +1318,10 @@ const I18N = {
     "docPhotosHint": "Zeskanowane strony:",
     "btnAddPage": "➕ Dodaj stronę",
     "btnDocPhotosDone": "✅ Gotowe — utwórz PDF",
-    "scannedDocName": "Zeskanowany dokument"
+    "scannedDocName": "Zeskanowany dokument",
+    "libLabelSig": "📚 Biblioteka podpisów",
+    "libLabelStamp": "📚 Biblioteka pieczątek",
+    "toastLibSelected": "Wybrano z biblioteki"
   },
   "tr": {
     "navDoc": "Belge",
@@ -1353,7 +1399,10 @@ const I18N = {
     "docPhotosHint": "Taranan sayfa:",
     "btnAddPage": "➕ Sayfa ekle",
     "btnDocPhotosDone": "✅ Bitti — PDF oluştur",
-    "scannedDocName": "Taranan belge"
+    "scannedDocName": "Taranan belge",
+    "libLabelSig": "📚 İmza kitaplığı",
+    "libLabelStamp": "📚 Kaşe kitaplığı",
+    "toastLibSelected": "Kitaplıktan seçildi"
   },
   "ar": {
     "navDoc": "المستند",
@@ -1431,7 +1480,10 @@ const I18N = {
     "docPhotosHint": "الصفحات الممسوحة:",
     "btnAddPage": "➕ إضافة صفحة",
     "btnDocPhotosDone": "✅ تم — إنشاء PDF",
-    "scannedDocName": "مستند ممسوح ضوئيًا"
+    "scannedDocName": "مستند ممسوح ضوئيًا",
+    "libLabelSig": "📚 مكتبة التوقيعات",
+    "libLabelStamp": "📚 مكتبة الأختام",
+    "toastLibSelected": "تم الاختيار من المكتبة"
   },
   "zh": {
     "navDoc": "文档",
@@ -1509,7 +1561,10 @@ const I18N = {
     "docPhotosHint": "已扫描页数：",
     "btnAddPage": "➕ 添加页面",
     "btnDocPhotosDone": "✅ 完成 — 生成PDF",
-    "scannedDocName": "扫描文档"
+    "scannedDocName": "扫描文档",
+    "libLabelSig": "📚 签名库",
+    "libLabelStamp": "📚 印章库",
+    "toastLibSelected": "已从库中选择"
   },
   "ja": {
     "navDoc": "書類",
@@ -1587,7 +1642,10 @@ const I18N = {
     "docPhotosHint": "スキャン済みページ数：",
     "btnAddPage": "➕ ページを追加",
     "btnDocPhotosDone": "✅ 完了 — PDFを作成",
-    "scannedDocName": "スキャンした書類"
+    "scannedDocName": "スキャンした書類",
+    "libLabelSig": "📚 署名ライブラリ",
+    "libLabelStamp": "📚 印鑑ライブラリ",
+    "toastLibSelected": "ライブラリから選択しました"
   },
   "ko": {
     "navDoc": "문서",
@@ -1665,7 +1723,10 @@ const I18N = {
     "docPhotosHint": "스캔된 페이지:",
     "btnAddPage": "➕ 페이지 추가",
     "btnDocPhotosDone": "✅ 완료 — PDF 생성",
-    "scannedDocName": "스캔한 문서"
+    "scannedDocName": "스캔한 문서",
+    "libLabelSig": "📚 서명 보관함",
+    "libLabelStamp": "📚 도장 보관함",
+    "toastLibSelected": "보관함에서 선택됨"
   },
   "hi": {
     "navDoc": "दस्तावेज़",
@@ -1743,7 +1804,10 @@ const I18N = {
     "docPhotosHint": "स्कैन किए गए पृष्ठ:",
     "btnAddPage": "➕ पृष्ठ जोड़ें",
     "btnDocPhotosDone": "✅ पूर्ण — PDF बनाएं",
-    "scannedDocName": "स्कैन किया गया दस्तावेज़"
+    "scannedDocName": "स्कैन किया गया दस्तावेज़",
+    "libLabelSig": "📚 हस्ताक्षर लाइब्रेरी",
+    "libLabelStamp": "📚 मुहर लाइब्रेरी",
+    "toastLibSelected": "लाइब्रेरी से चुना गया"
   },
   "nl": {
     "navDoc": "Document",
@@ -1821,7 +1885,10 @@ const I18N = {
     "docPhotosHint": "Gescande pagina's:",
     "btnAddPage": "➕ Pagina toevoegen",
     "btnDocPhotosDone": "✅ Klaar — PDF maken",
-    "scannedDocName": "Gescand document"
+    "scannedDocName": "Gescand document",
+    "libLabelSig": "📚 Handtekeningbibliotheek",
+    "libLabelStamp": "📚 Stempelbibliotheek",
+    "toastLibSelected": "Geselecteerd uit bibliotheek"
   },
   "sv": {
     "navDoc": "Dokument",
@@ -1899,7 +1966,10 @@ const I18N = {
     "docPhotosHint": "Skannade sidor:",
     "btnAddPage": "➕ Lägg till sida",
     "btnDocPhotosDone": "✅ Klar — skapa PDF",
-    "scannedDocName": "Skannat dokument"
+    "scannedDocName": "Skannat dokument",
+    "libLabelSig": "📚 Signaturbibliotek",
+    "libLabelStamp": "📚 Stämpelbibliotek",
+    "toastLibSelected": "Valt från biblioteket"
   },
   "cs": {
     "navDoc": "Dokument",
@@ -1977,7 +2047,10 @@ const I18N = {
     "docPhotosHint": "Naskenované strany:",
     "btnAddPage": "➕ Přidat stránku",
     "btnDocPhotosDone": "✅ Hotovo — vytvořit PDF",
-    "scannedDocName": "Naskenovaný dokument"
+    "scannedDocName": "Naskenovaný dokument",
+    "libLabelSig": "📚 Knihovna podpisů",
+    "libLabelStamp": "📚 Knihovna razítek",
+    "toastLibSelected": "Vybráno z knihovny"
   },
   "el": {
     "navDoc": "Έγγραφο",
@@ -2055,7 +2128,10 @@ const I18N = {
     "docPhotosHint": "Σαρωμένες σελίδες:",
     "btnAddPage": "➕ Προσθήκη σελίδας",
     "btnDocPhotosDone": "✅ Έτοιμο — δημιουργία PDF",
-    "scannedDocName": "Σαρωμένο έγγραφο"
+    "scannedDocName": "Σαρωμένο έγγραφο",
+    "libLabelSig": "📚 Βιβλιοθήκη υπογραφών",
+    "libLabelStamp": "📚 Βιβλιοθήκη σφραγίδων",
+    "toastLibSelected": "Επιλέχθηκε από τη βιβλιοθήκη"
   },
   "he": {
     "navDoc": "מסמך",
@@ -2133,7 +2209,10 @@ const I18N = {
     "docPhotosHint": "עמודים שנסרקו:",
     "btnAddPage": "➕ הוסף עמוד",
     "btnDocPhotosDone": "✅ סיום — צור PDF",
-    "scannedDocName": "מסמך סרוק"
+    "scannedDocName": "מסמך סרוק",
+    "libLabelSig": "📚 ספריית חתימות",
+    "libLabelStamp": "📚 ספריית חותמות",
+    "toastLibSelected": "נבחר מהספרייה"
   },
   "vi": {
     "navDoc": "Tài liệu",
@@ -2211,7 +2290,10 @@ const I18N = {
     "docPhotosHint": "Số trang đã quét:",
     "btnAddPage": "➕ Thêm trang",
     "btnDocPhotosDone": "✅ Xong — tạo PDF",
-    "scannedDocName": "Tài liệu đã quét"
+    "scannedDocName": "Tài liệu đã quét",
+    "libLabelSig": "📚 Thư viện chữ ký",
+    "libLabelStamp": "📚 Thư viện con dấu",
+    "toastLibSelected": "Đã chọn từ thư viện"
   },
   "th": {
     "navDoc": "เอกสาร",
@@ -2289,7 +2371,10 @@ const I18N = {
     "docPhotosHint": "หน้าที่สแกน:",
     "btnAddPage": "➕ เพิ่มหน้า",
     "btnDocPhotosDone": "✅ เสร็จสิ้น — สร้าง PDF",
-    "scannedDocName": "เอกสารที่สแกน"
+    "scannedDocName": "เอกสารที่สแกน",
+    "libLabelSig": "📚 คลังลายเซ็น",
+    "libLabelStamp": "📚 คลังตราประทับ",
+    "toastLibSelected": "เลือกจากคลังแล้ว"
   },
   "id": {
     "navDoc": "Dokumen",
@@ -2367,7 +2452,10 @@ const I18N = {
     "docPhotosHint": "Halaman dipindai:",
     "btnAddPage": "➕ Tambah halaman",
     "btnDocPhotosDone": "✅ Selesai — buat PDF",
-    "scannedDocName": "Dokumen yang dipindai"
+    "scannedDocName": "Dokumen yang dipindai",
+    "libLabelSig": "📚 Pustaka tanda tangan",
+    "libLabelStamp": "📚 Pustaka stempel",
+    "toastLibSelected": "Dipilih dari pustaka"
   },
   "ro": {
     "navDoc": "Document",
@@ -2445,7 +2533,10 @@ const I18N = {
     "docPhotosHint": "Pagini scanate:",
     "btnAddPage": "➕ Adaugă pagină",
     "btnDocPhotosDone": "✅ Gata — creează PDF",
-    "scannedDocName": "Document scanat"
+    "scannedDocName": "Document scanat",
+    "libLabelSig": "📚 Bibliotecă semnături",
+    "libLabelStamp": "📚 Bibliotecă ștampile",
+    "toastLibSelected": "Selectat din bibliotecă"
   },
   "kk": {
     "navDoc": "Құжат",
@@ -2523,7 +2614,10 @@ const I18N = {
     "docPhotosHint": "Сканерленген беттер:",
     "btnAddPage": "➕ Бет қосу",
     "btnDocPhotosDone": "✅ Дайын — PDF жасау",
-    "scannedDocName": "Сканерленген құжат"
+    "scannedDocName": "Сканерленген құжат",
+    "libLabelSig": "📚 Қолтаңба кітапханасы",
+    "libLabelStamp": "📚 Мөр кітапханасы",
+    "toastLibSelected": "Кітапханадан таңдалды"
   }
 };
 const LANGS = [
@@ -2742,6 +2836,52 @@ function loadLS(k,nk,type){
   applyImg(type,d,n+' ✓');
 }
 
+// ── SIGNATURE/STAMP LIBRARY (per-device, localStorage) ──
+const LIB_MAX=24;
+function libKey(type){return type==='sig'?'sp_sig_lib':'sp_stmp_lib';}
+function loadLibrary(type){
+  try{ const raw=localStorage.getItem(libKey(type)); return raw?JSON.parse(raw):[]; }catch(e){ return []; }
+}
+function saveLibrary(type,list){ try{ localStorage.setItem(libKey(type),JSON.stringify(list)); }catch(e){} }
+function addToLibrary(type,dataUrl,name){
+  let lib=loadLibrary(type);
+  const existing=lib.find(it=>it.d===dataUrl);
+  if(existing){
+    existing.name=name; existing.ts=Date.now();
+    lib=[existing,...lib.filter(it=>it!==existing)];
+  } else {
+    lib=[{id:'lib_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),d:dataUrl,name,ts:Date.now()},...lib];
+  }
+  if(lib.length>LIB_MAX)lib=lib.slice(0,LIB_MAX);
+  saveLibrary(type,lib);
+  renderLibrary(type);
+}
+function removeFromLibrary(type,id){
+  saveLibrary(type,loadLibrary(type).filter(it=>it.id!==id));
+  renderLibrary(type);
+}
+function selectFromLibrary(type,id){
+  const it=loadLibrary(type).find(x=>x.id===id); if(!it)return;
+  saveLS(type==='sig'?LS.SIG:LS.STMP, type==='sig'?LS.SIGN:LS.STMPN, it.d, it.name);
+  applyImg(type,it.d,it.name);
+  toast(tr('toastLibSelected'),'success');
+}
+function renderLibrary(type){
+  const lib=loadLibrary(type);
+  const wrap=document.getElementById(type==='sig'?'sigLibWrap':'stmpLibWrap');
+  const strip=document.getElementById(type==='sig'?'sigLibStrip':'stmpLibStrip');
+  if(!wrap||!strip)return;
+  if(!lib.length){ wrap.style.display='none'; strip.innerHTML=''; return; }
+  wrap.style.display='block';
+  const activeUrl=type==='sig'?sigDataUrl:stmpDataUrl;
+  strip.innerHTML=lib.map(it=>`
+    <div class="lib-thumb${it.d===activeUrl?' active':''}" onclick="selectFromLibrary('${type}','${it.id}')">
+      <img src="${it.d}">
+      <button class="lib-del" onclick="event.stopPropagation();removeFromLibrary('${type}','${it.id}')">✕</button>
+    </div>
+  `).join('');
+}
+
 // ── TABS ──
 let activeTab='doc';
 function switchTab(tab){
@@ -2876,6 +3016,7 @@ function applyImg(type,dataUrl,name){
     document.getElementById('stmpLoaded').style.display='block';
   }
   updateExportBtn();
+  renderLibrary(type);
 }
 
 function loadImgFile(inputId,type){
@@ -2885,6 +3026,7 @@ function loadImgFile(inputId,type){
     const d=e.target.result;
     saveLS(type==='sig'?LS.SIG:LS.STMP, type==='sig'?LS.SIGN:LS.STMPN, d, f.name);
     applyImg(type,d,f.name+' '+tr('savedSuffix'));
+    addToLibrary(type,d,f.name);
     toast(tr('toastUploadedSaved'),'success');
   };
   r.readAsDataURL(f);
@@ -2907,6 +3049,7 @@ function clearImg(type){
     document.getElementById('stmpInput').value='';
   }
   updateExportBtn();
+  renderLibrary(type);
 }
 
 // ── VIEWER ──
@@ -3445,6 +3588,7 @@ function applyProcessed(){
   const lsNKey=procTarget==='sig'?LS.SIGN:LS.STMPN;
   saveLS(lsKey,lsNKey,d,name);
   applyImg(procTarget,d,name+' '+tr('savedSuffix'));
+  addToLibrary(procTarget,d,name);
   closeProcessor();
   toast(tr('toastBgRemoved'),'success');
 }
@@ -3473,6 +3617,7 @@ window.addEventListener('DOMContentLoaded',()=>{
   applyLanguage(savedLang);
   loadLS(LS.SIG,LS.SIGN,'sig');
   loadLS(LS.STMP,LS.STMPN,'stmp');
+  renderLibrary('sig'); renderLibrary('stmp');
   if(sigDataUrl||stmpDataUrl) toast(tr('toastLoadedFromMemory'),'success');
   // Desktop: show sidebar
   if(window.innerWidth>=700){
