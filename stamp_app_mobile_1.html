@@ -5,66 +5,69 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Печать и Подпись">
-<meta name="theme-color" content="#2a5cff">
-<meta name="description" content="Ставьте подпись и печать на PDF-документы прямо с телефона">
-<title>Печать и Подпись</title>
+<meta name="apple-mobile-web-app-title" content="Stampus">
+<meta name="theme-color" content="#14141d">
+<meta name="description" content="Stampus — ставьте подпись и печать на PDF-документы прямо с телефона">
+<title>Stampus</title>
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
 :root{
-  --bg:#f4f4fb;--surface:#fff;--surface2:#f2eefa;--border:#e6e1f5;
-  --text:#15121f;--text2:#726d87;--accent:#6d5df6;--accent-light:#efe9ff;
-  --danger:#ef4360;--success:#12b76a;--r:18px;--sh:0 10px 30px rgba(90,60,190,.14);
-  --nav-h:70px;--header-h:60px;
-  --grad:linear-gradient(135deg,#6d5df6 0%,#a855f7 55%,#ec4899 100%);
-  --grad2:linear-gradient(135deg,#fb923c 0%,#f43f5e 100%);
-  --grad3:linear-gradient(135deg,#8b5cf6 0%,#ec4899 100%);
+  --bg:#14141d;--surface:#1c1c28;--surface2:#242432;--surface3:#2b2b3b;
+  --border:rgba(237,237,243,.09);--border-strong:rgba(237,237,243,.20);
+  --text:#eeeef3;--text2:#a3a3b5;--text3:#6f6f82;
+  --accent:#5266eb;--accent-hover:#6d7ef2;--accent-light:rgba(82,102,235,.16);
+  --danger:#f0475f;--success:#1cb977;--r:20px;--r-lg:26px;
+  --sh:0 12px 30px rgba(0,0,0,.45);--sh-sm:0 4px 14px rgba(0,0,0,.3);
+  --nav-h:92px;--header-h:60px;
+  --grad:var(--accent);--grad2:var(--accent);--grad3:var(--accent);
 }
 
 html,body{height:100%;overflow:hidden}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   background:
-    radial-gradient(circle at 12% -8%, rgba(109,93,246,.16), transparent 42%),
-    radial-gradient(circle at 105% 0%, rgba(236,72,153,.14), transparent 40%),
-    radial-gradient(circle at 50% 120%, rgba(168,85,247,.10), transparent 45%),
+    radial-gradient(circle at 20% -10%, rgba(82,102,235,.16), transparent 45%),
+    radial-gradient(circle at 100% 10%, rgba(82,102,235,.08), transparent 40%),
     var(--bg);
-  color:var(--text);font-size:15px}
+  color:var(--text);font-size:15px;letter-spacing:-.01em}
 
 /* ─── HEADER ─── */
 .header{
   position:fixed;top:0;left:0;right:0;height:var(--header-h);
-  background:rgba(255,255,255,.72);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
-  border-bottom:1px solid rgba(21,18,31,.06);
+  background:rgba(20,20,29,.78);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);
+  border-bottom:1px solid var(--border);
   display:flex;align-items:center;padding:0 16px;gap:10px;z-index:100;
 }
-.header-logo{width:34px;height:34px;background:var(--grad);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0;box-shadow:0 6px 16px rgba(109,93,246,.4)}
-.header-title{font-size:16px;font-weight:700;flex:1}
+.header-logo{width:34px;height:34px;background:var(--accent);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0;box-shadow:var(--sh-sm)}
+.header-title{font-size:16px;font-weight:600;flex:1;color:var(--text)}
 .header-sub{font-size:11px;color:var(--text2)}
 .header-actions{display:flex;gap:8px;margin-left:auto}
-.icon-btn{width:36px;height:36px;border:1.5px solid var(--border);border-radius:13px;background:rgba(255,255,255,.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .15s}
-.icon-btn:hover,.icon-btn:active{background:var(--surface2)}
-.icon-btn.accent{background:var(--grad);border-color:transparent;color:#fff;box-shadow:0 6px 14px rgba(109,93,246,.35)}
-.icon-btn.accent:active{filter:brightness(.92)}
+.icon-btn{width:36px;height:36px;border:1px solid var(--border);border-radius:13px;background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .15s;color:var(--text)}
+.icon-btn:hover,.icon-btn:active{background:var(--surface3)}
+.icon-btn.accent{background:var(--accent);border-color:transparent;color:#fff;box-shadow:var(--sh-sm)}
+.icon-btn.accent:active{background:var(--accent-hover)}
 
-/* ─── BOTTOM NAV ─── */
+/* ─── BOTTOM NAV (floating) ─── */
 .nav{
-  position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);
-  background:rgba(255,255,255,.82);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);
-  border-top:1px solid rgba(21,18,31,.06);
+  position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 14px);
+  height:64px;border-radius:var(--r-lg);
+  background:rgba(28,28,40,.86);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);
+  border:1px solid var(--border);
   display:flex;z-index:100;
-  padding-bottom:env(safe-area-inset-bottom);
-  box-shadow:0 -10px 30px rgba(40,20,90,.07);
+  box-shadow:var(--sh);
 }
 .nav-btn{flex:1;border:none;background:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;transition:all .15s;position:relative}
 .nav-btn .nb-icon{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:12px;font-size:19px;line-height:1;color:var(--text2);transition:all .25s cubic-bezier(.2,.8,.3,1)}
-.nav-btn .nb-label{font-size:10px;font-weight:700;color:var(--text2);letter-spacing:.01em;margin-top:1px}
+.nav-btn .nb-label{font-size:10px;font-weight:600;color:var(--text2);letter-spacing:.01em;margin-top:1px}
 .nav-btn.active .nb-label{color:var(--text)}
-.nav-btn.active .nb-icon{background:var(--grad);color:#fff;box-shadow:0 6px 16px rgba(109,93,246,.45);transform:translateY(-2px)}
-.nav-btn .badge{position:absolute;top:2px;right:calc(50% - 14px);background:var(--grad2);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px;min-width:16px;text-align:center;box-shadow:0 3px 8px rgba(244,63,94,.4)}
+.nav-btn.active .nb-icon{background:var(--accent);color:#fff;box-shadow:var(--sh-sm);transform:translateY(-2px)}
+.nav-btn .badge{position:absolute;top:2px;right:calc(50% - 14px);background:var(--danger);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px;min-width:16px;text-align:center;box-shadow:var(--sh-sm)}
 
 /* ─── SCREENS ─── */
 .screen{
@@ -73,37 +76,50 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   display:none;padding:16px;
   padding-bottom:calc(env(safe-area-inset-bottom) + 16px);
 }
-.screen.active{display:block}
+.screen.active{display:block;animation:fadeInUp .32s cubic-bezier(.2,.8,.3,1)}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 /* ─── CARDS ─── */
-.card{background:rgba(255,255,255,.86);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border-radius:var(--r);border:1px solid rgba(255,255,255,.7);margin-bottom:16px;overflow:hidden;box-shadow:var(--sh)}
+.card{background:var(--surface);border-radius:var(--r);border:1px solid var(--border);margin-bottom:16px;overflow:hidden;box-shadow:var(--sh)}
 .card-header{padding:14px 16px 10px;display:flex;align-items:center;gap:10px;background:transparent;border-bottom:none}
-.card-header .ch-icon{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--grad);color:#fff;font-size:16px;flex-shrink:0;box-shadow:0 4px 10px rgba(109,93,246,.3)}
-#screen-doc .card:nth-of-type(2) .ch-icon{background:var(--grad3);box-shadow:0 4px 10px rgba(139,92,246,.3)}
-#screen-doc .card:nth-of-type(3) .ch-icon{background:var(--grad2);box-shadow:0 4px 10px rgba(244,63,94,.3)}
-.card-header .ch-title{font-size:14px;font-weight:800;letter-spacing:-.01em;flex:1}
+.card-header .ch-icon{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;font-size:16px;flex-shrink:0;box-shadow:var(--sh-sm)}
+#screen-doc .card:nth-of-type(2) .ch-icon{background:var(--accent)}
+#screen-doc .card:nth-of-type(3) .ch-icon{background:var(--accent)}
+.card-header .ch-title{font-size:14px;font-weight:600;letter-spacing:-.01em;flex:1;color:var(--text)}
 .card-body{padding:6px 16px 18px}
 
 /* ─── UPLOAD ZONE ─── */
 .upload-zone{
-  border:2px dashed rgba(109,93,246,.28);border-radius:16px;padding:20px 16px;
+  border:1.5px dashed var(--border-strong);border-radius:16px;padding:20px 16px;
   text-align:center;cursor:pointer;transition:all .2s;
-  background:linear-gradient(180deg,rgba(109,93,246,.05),rgba(236,72,153,.03));
+  background:var(--surface2);
   display:flex;flex-direction:column;align-items:center;gap:6px;
 }
 .upload-zone:active{border-color:var(--accent);background:var(--accent-light)}
-.upload-zone .uz-icon{width:56px;height:56px;border-radius:16px;background:rgba(109,93,246,.10);display:flex;align-items:center;justify-content:center;font-size:26px;opacity:1;margin-bottom:2px}
-.upload-zone .uz-title{font-size:14px;font-weight:700;color:var(--text)}
+.upload-zone .uz-icon{width:56px;height:56px;border-radius:16px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:26px;opacity:1;margin-bottom:2px}
+.upload-zone .uz-title{font-size:14px;font-weight:600;color:var(--text)}
 .upload-zone .uz-sub{font-size:12px;color:var(--text2)}
 .upload-zone input{display:none}
 
+/* ─── OR DIVIDER ─── */
+.or-divider{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ─── DOC PHOTO STAGE ─── */
+.dp-strip{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px}
+.dp-strip::-webkit-scrollbar{display:none}
+.dp-thumb{position:relative;flex-shrink:0;width:60px;height:80px;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:var(--surface2)}
+.dp-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.dp-thumb .dp-num{position:absolute;bottom:3px;left:3px;background:rgba(0,0,0,.6);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:8px;line-height:1.4}
+.dp-thumb .dp-del{position:absolute;top:3px;right:3px;width:18px;height:18px;background:var(--danger);color:#fff;border:none;border-radius:50%;font-size:10px;line-height:18px;text-align:center;cursor:pointer;padding:0}
+
 /* ─── FILE ROW ─── */
 .file-row{display:flex;align-items:center;gap:10px;padding:10px 0;min-width:0}
-.file-icon{font-size:28px;flex-shrink:0}
+.file-icon{font-size:20px;flex-shrink:0;width:38px;height:38px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center}
 .file-info{flex:1;min-width:0}
-.file-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
 .file-meta{font-size:11px;color:var(--text2);margin-top:2px}
-.file-del{width:34px;height:34px;border:none;border-radius:12px;background:rgba(239,67,96,.08);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--danger);flex-shrink:0}
+.file-del{width:34px;height:34px;border:none;border-radius:12px;background:rgba(240,71,95,.12);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--danger);flex-shrink:0}
 
 /* ─── PREVIEW IMG ─── */
 .preview-img{width:100%;max-height:90px;object-fit:contain;border-radius:14px;background:var(--surface2);border:1px solid var(--border);margin-top:8px}
@@ -112,18 +128,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .size-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .size-grid.one-col{grid-template-columns:1fr}
 .size-field label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:5px}
-.size-field input{width:100%;padding:10px 12px;border:1.5px solid transparent;border-radius:13px;font-size:15px;background:var(--surface2);color:var(--text);-webkit-appearance:none}
-.size-field input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(109,93,246,.14)}
+.size-field input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:13px;font-size:15px;background:var(--surface2);color:var(--text);-webkit-appearance:none}
+.size-field input:focus{outline:none;border-color:var(--accent);background:var(--surface3);box-shadow:0 0 0 4px var(--accent-light)}
 
 /* ─── BUTTONS ─── */
-.btn{width:100%;padding:15px;border:none;border-radius:999px;font-size:15px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;letter-spacing:-.01em}
-.btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 24px rgba(109,93,246,.35)}
-.btn-primary:active{filter:brightness(.94);transform:scale(.98)}
-.btn-primary:disabled{background:#dcd8f5;color:#fff;box-shadow:none;cursor:not-allowed;transform:none}
-.btn-secondary{background:rgba(255,255,255,.7);backdrop-filter:blur(6px);color:var(--text);border:1.5px solid var(--border)}
-.btn-secondary:active{background:var(--border)}
-.btn-process{background:rgba(109,93,246,.05);border:1.5px dashed var(--accent);color:var(--accent);padding:11px;border-radius:999px;font-size:13px;font-weight:700;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;transition:background .15s}
-.btn-process:active{background:var(--accent-light)}
+.btn{width:100%;padding:15px;border:none;border-radius:999px;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;letter-spacing:-.01em}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:var(--sh-sm)}
+.btn-primary:active{background:var(--accent-hover);transform:scale(.98)}
+.btn-primary:disabled{background:var(--surface3);color:var(--text3);box-shadow:none;cursor:not-allowed;transform:none}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:active{background:var(--surface3)}
+.btn-process{background:var(--accent-light);border:1.5px dashed var(--accent);color:var(--accent);padding:11px;border-radius:999px;font-size:13px;font-weight:600;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px;transition:background .15s}
+.btn-process:active{background:rgba(82,102,235,.24)}
 
 .btn .spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
 .btn.loading .spinner{display:block}
@@ -135,30 +151,30 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   position:fixed;top:var(--header-h);bottom:var(--nav-h);left:0;right:0;
   display:none;flex-direction:column;overflow:hidden;
 }
-.viewer-screen.active{display:flex}
+.viewer-screen.active{display:flex;animation:fadeInUp .32s cubic-bezier(.2,.8,.3,1)}
 
 .viewer-toolbar{
-  background:rgba(255,255,255,.82);backdrop-filter:blur(16px) saturate(180%);border-bottom:1px solid rgba(21,18,31,.06);
+  background:rgba(28,28,40,.86);backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid var(--border);
   padding:8px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;
   overflow-x:auto;-webkit-overflow-scrolling:touch;
 }
 .viewer-toolbar::-webkit-scrollbar{display:none}
 
 .mode-chip{
-  padding:7px 13px;border:1.5px solid var(--border);border-radius:20px;
-  background:rgba(255,255,255,.5);cursor:pointer;font-size:12px;font-weight:700;
+  padding:7px 13px;border:1px solid var(--border);border-radius:20px;
+  background:var(--surface2);cursor:pointer;font-size:12px;font-weight:600;color:var(--text);
   white-space:nowrap;transition:all .15s;flex-shrink:0;
 }
-.mode-chip.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(109,93,246,.35)}
+.mode-chip.active{background:var(--accent);color:#fff;border-color:transparent;box-shadow:var(--sh-sm)}
 
 .page-nav{display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:auto}
-.page-nav button{width:32px;height:32px;border:none;border-radius:11px;background:var(--surface2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.page-nav button{width:32px;height:32px;border:none;border-radius:11px;background:var(--surface2);color:var(--text);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
 .page-nav button:disabled{opacity:.4}
 .page-nav span{font-size:12px;color:var(--text2);white-space:nowrap;min-width:40px;text-align:center}
 
 .viewer-canvas-wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;position:relative;background:var(--bg)}
 .canvas-container{position:relative;display:inline-block;min-width:100%;cursor:crosshair;touch-action:none}
-#pdfCanvas{display:block;width:100%}
+#pdfCanvas{display:block;width:100%;border-radius:8px}
 #overlayLayer{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
 
 .apply-all-row{display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--accent-light);border-radius:12px;flex-shrink:0}
@@ -176,42 +192,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .placement:hover .del-x,.placement.sel .del-x{display:block}
 
 /* ─── PLACEMENT LIST ─── */
-.pl-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(109,93,246,.06);margin-bottom:8px}
+.pl-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--surface2);margin-bottom:8px;border:1px solid var(--border)}
 .pl-item .pi-icon{font-size:20px;flex-shrink:0}
-.pl-item .pi-info{flex:1;font-size:13px}
-.pl-item .pi-page{font-weight:700}
+.pl-item .pi-info{flex:1;font-size:13px;color:var(--text)}
+.pl-item .pi-page{font-weight:600}
 .pl-item .pi-size{color:var(--text2);font-size:12px}
 .pl-item .pi-del{background:none;border:none;color:var(--danger);cursor:pointer;font-size:18px;padding:4px;flex-shrink:0}
 
 /* ─── EMPTY STATE ─── */
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;text-align:center;padding:24px}
-.empty-state .es-icon{font-size:64px;opacity:.35}
-.empty-state h2{font-size:20px;font-weight:800}
+.empty-state .es-icon{font-size:34px;opacity:1;width:72px;height:72px;border-radius:20px;background:var(--surface2);display:flex;align-items:center;justify-content:center}
+.empty-state h2{font-size:20px;font-weight:600;color:var(--text)}
 .empty-state p{font-size:14px;color:var(--text2);max-width:260px;line-height:1.5}
 
 /* ─── MODAL ─── */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(20,12,40,.55);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(6,6,12,.6);backdrop-filter:blur(2px);z-index:500;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:28px 28px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom) + 20px);width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.modal-handle{width:40px;height:5px;background:var(--border);border-radius:3px;margin:0 auto 16px}
-.modal h2{font-size:17px;font-weight:800;margin-bottom:4px}
+.modal{background:var(--surface);border-radius:28px 28px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom) + 20px);width:100%;max-height:90vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-bottom:none}
+.modal-handle{width:40px;height:5px;background:var(--border-strong);border-radius:3px;margin:0 auto 16px}
+.modal h2{font-size:17px;font-weight:600;margin-bottom:4px;color:var(--text)}
 .modal .modal-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
 
 .compare-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
 .compare-box{border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.compare-box .cb-label{font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;padding:5px 8px;background:var(--surface2);border-bottom:1px solid var(--border)}
-.compare-box canvas{width:100%;display:block;background:repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 0/10px 10px;min-height:100px;object-fit:contain}
+.compare-box .cb-label{font-size:10px;font-weight:600;color:var(--text2);text-transform:uppercase;padding:5px 8px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.compare-box canvas{width:100%;display:block;background:repeating-conic-gradient(#3a3a4a 0% 25%,#2a2a38 0% 50%) 0 0/10px 10px;min-height:100px;object-fit:contain}
 
 .slider-group{margin-bottom:14px}
-.slider-group .sg-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:6px}
+.slider-group .sg-label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text)}
 .slider-group .sg-label span{color:var(--text2);font-weight:400}
 .slider-group input[type=range]{width:100%;height:6px;accent-color:var(--accent);cursor:pointer}
 .slider-hint{font-size:11px;color:var(--text2);margin-top:4px;line-height:1.4}
 
 .mode-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto}
 .mode-tabs::-webkit-scrollbar{display:none}
-.mode-tab{padding:8px 14px;border:1.5px solid var(--border);border-radius:20px;background:rgba(255,255,255,.5);cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;transition:all .15s}
-.mode-tab.active{background:var(--grad);color:#fff;border-color:transparent}
+.mode-tab{padding:8px 14px;border:1px solid var(--border);border-radius:20px;background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;transition:all .15s}
+.mode-tab.active{background:var(--accent);color:#fff;border-color:transparent}
 
 .modal-btns{display:flex;gap:10px;margin-top:16px}
 .modal-btns .btn{flex:1}
@@ -219,25 +235,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 /* ─── TOAST ─── */
 .toast{
   position:fixed;bottom:calc(var(--nav-h) + 12px);left:16px;right:16px;
-  background:rgba(21,15,35,.92);backdrop-filter:blur(10px);color:#fff;padding:13px 16px;border-radius:16px;
-  font-size:13px;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.28);
+  background:var(--surface3);backdrop-filter:blur(10px);color:var(--text);padding:13px 16px;border-radius:16px;
+  font-size:13px;font-weight:600;box-shadow:var(--sh);border:1px solid var(--border);
   transform:translateY(20px);opacity:0;transition:all .3s;z-index:1000;
   text-align:center;pointer-events:none;
 }
 .toast.show{transform:translateY(0);opacity:1}
-.toast.success{background:var(--success)}
-.toast.error{background:var(--danger)}
+.toast.success{background:var(--success);color:#fff;border-color:transparent}
+.toast.error{background:var(--danger);color:#fff;border-color:transparent}
 
 /* ─── DESKTOP OVERRIDE ─── */
 @media(min-width:700px){
   .modal-overlay{align-items:center}
-  .modal{border-radius:20px;max-width:560px;max-height:80vh}
+  .modal{border-radius:20px;max-width:560px;max-height:80vh;border-bottom:1px solid var(--border)}
   .screen,.viewer-screen{
     top:var(--header-h);left:280px;
     transition:left .2s;
   }
   .sidebar-desktop{
-    position:fixed;top:var(--header-h);left:0;bottom:var(--nav-h);
+    position:fixed;top:var(--header-h);left:0;bottom:0;
     width:280px;background:var(--surface);border-right:1px solid var(--border);
     overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;
   }
@@ -245,6 +261,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   .screen,.viewer-screen{bottom:0}
   .toast{left:296px;bottom:16px}
 }
+
+/* ─── LANGUAGE PICKER ─── */
+.lang-list{display:flex;flex-direction:column;gap:6px;max-height:52vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.lang-item{display:flex;align-items:center;gap:10px;width:100%;border:1px solid var(--border);background:var(--surface2);color:var(--text);border-radius:14px;padding:11px 14px;cursor:pointer;font-size:14px;font-weight:600;transition:all .15s;text-align:left}
+.lang-item:active{background:var(--surface3)}
+.lang-item.active{background:var(--accent-light);border-color:var(--accent)}
+.lang-item .li-flag{font-size:19px;flex-shrink:0}
+.lang-item .li-name{flex:1}
+.lang-item .li-check{color:var(--accent);font-weight:700;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -253,12 +278,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 <div class="header">
   <div class="header-logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg></div>
   <div style="flex:1;min-width:0">
-    <div class="header-title">Печать и Подпись</div>
-    <div class="header-sub" id="headerSub">Подпись и печать на PDF</div>
+    <div class="header-title">Stampus</div>
+    <div class="header-sub" id="headerSub" data-i18n="tagline">Подпись и печать на PDF</div>
   </div>
   <div class="header-actions">
-    <button class="icon-btn" id="installBtn" style="display:none" onclick="installPwa()" title="Установить приложение"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></button>
-    <button class="icon-btn accent" id="exportBtnHeader" onclick="exportPdf()" disabled title="Скачать PDF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></button>
+    <button class="icon-btn" id="langBtn" onclick="openLangModal()" data-i18n-title="langPickerTitle" title="Язык"><span id="langBtnFlag">🇷🇺</span></button>
+    <button class="icon-btn" id="installBtn" style="display:none" onclick="installPwa()" data-i18n-title="installTitle" title="Установить приложение"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></button>
+    <button class="icon-btn accent" id="exportBtnHeader" onclick="exportPdf()" disabled data-i18n-title="exportTitle" title="Скачать PDF"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></button>
   </div>
 </div>
 
@@ -273,15 +299,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   <div class="card">
     <div class="card-header">
       <span class="ch-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg></span>
-      <span class="ch-title">PDF-документ</span>
+      <span class="ch-title" data-i18n="cardDocTitle">PDF-документ</span>
     </div>
     <div class="card-body">
       <div id="docEmpty">
         <div class="upload-zone" onclick="document.getElementById('pdfInput').click()">
           <div class="uz-icon">📄</div>
-          <div class="uz-title">Выбрать PDF</div>
-          <div class="uz-sub">Нажмите или перетащите файл</div>
+          <div class="uz-title" data-i18n="uploadPdfTitle">Выбрать PDF</div>
+          <div class="uz-sub" data-i18n="uploadPdfSub">Нажмите или перетащите файл</div>
           <input type="file" id="pdfInput" accept=".pdf">
+        </div>
+        <div class="or-divider"><span data-i18n="orDivider">или</span></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-process" style="margin-top:0;flex:1" onclick="startDocCamera()"><span data-i18n="btnTakePhoto">📷 Камера</span></button>
+          <button class="btn-process" style="margin-top:0;flex:1" onclick="startDocGallery()"><span data-i18n="btnGallery">🖼 Галерея</span></button>
+        </div>
+        <input type="file" id="docCamInput" accept="image/*" capture="environment" style="display:none">
+        <input type="file" id="docGalleryInput" accept="image/*" multiple style="display:none">
+
+        <div id="docPhotoStage" style="display:none;margin-top:14px">
+          <div class="dp-strip" id="docPhotoStrip"></div>
+          <div style="font-size:12px;color:var(--text2);margin:6px 0 10px">
+            <span data-i18n="docPhotosHint">Страниц отсканировано:</span> <span id="docPhotoCount">0</span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary" style="flex:1;padding:11px" onclick="startDocCamera()"><span data-i18n="btnAddPage">➕ Ещё страница</span></button>
+            <button class="btn btn-secondary" style="flex:0 0 44px;padding:11px" onclick="clearDocPhotos()">🗑</button>
+          </div>
+          <button class="btn btn-primary" style="margin-top:8px" id="docPhotoDoneBtn" onclick="finishDocPhotos()">
+            <div class="spinner"></div>
+            <span class="btn-text" data-i18n="btnDocPhotosDone">✅ Готово — создать PDF</span>
+          </button>
         </div>
       </div>
       <div id="docLoaded" style="display:none">
@@ -294,7 +342,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
           <button class="file-del" onclick="clearPdf()">✕</button>
         </div>
         <button class="btn btn-primary" style="margin-top:8px" onclick="goToViewer()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> <span class="btn-text">Расставить подписи</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> <span class="btn-text" data-i18n="btnPlaceSignatures">Расставить подписи</span>
         </button>
       </div>
     </div>
@@ -303,17 +351,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   <div class="card">
     <div class="card-header">
       <span class="ch-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
-      <span class="ch-title">Подпись</span>
+      <span class="ch-title" data-i18n="cardSigTitle">Подпись</span>
     </div>
     <div class="card-body">
       <div id="sigZoneWrap">
         <div class="upload-zone" onclick="document.getElementById('sigInput').click()">
           <div class="uz-icon">🖊️</div>
-          <div class="uz-title">PNG с прозрачным фоном</div>
-          <div class="uz-sub">или обработайте фото ниже</div>
+          <div class="uz-title" data-i18n="uploadImgTitle">PNG с прозрачным фоном</div>
+          <div class="uz-sub" data-i18n="uploadImgSub">или обработайте фото ниже</div>
           <input type="file" id="sigInput" accept="image/*">
         </div>
-        <button class="btn-process" onclick="openProcessor('sig')">✨ Загрузить фото и убрать фон</button>
+        <button class="btn-process" onclick="openProcessor('sig')"><span data-i18n="btnProcessUpload">✨ Загрузить фото и убрать фон</span></button>
       </div>
       <div id="sigLoaded" style="display:none">
         <img id="sigPreview" class="preview-img">
@@ -321,11 +369,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
           <div class="file-info"><div class="file-name" id="sigName">—</div></div>
           <button class="file-del" onclick="clearImg('sig')">✕</button>
         </div>
-        <button class="btn-process" onclick="openProcessor('sig')">✨ Заменить / обработать</button>
+        <button class="btn-process" onclick="openProcessor('sig')"><span data-i18n="btnProcessReplace">✨ Заменить / обработать</span></button>
       </div>
       <div class="size-grid" style="margin-top:12px">
-        <div class="size-field"><label>Ширина (мм)</label><input type="number" id="sigW" value="48" min="5" max="150"></div>
-        <div class="size-field"><label>Высота (мм)</label><input type="number" id="sigH" value="24" min="3" max="100"></div>
+        <div class="size-field"><label data-i18n="labelWidthMm">Ширина (мм)</label><input type="number" id="sigW" value="48" min="5" max="150"></div>
+        <div class="size-field"><label data-i18n="labelHeightMm">Высота (мм)</label><input type="number" id="sigH" value="24" min="3" max="100"></div>
       </div>
     </div>
   </div>
@@ -333,17 +381,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   <div class="card">
     <div class="card-header">
       <span class="ch-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="m9 12 2 2 4-4"/></svg></span>
-      <span class="ch-title">Печать</span>
+      <span class="ch-title" data-i18n="cardStampTitle">Печать</span>
     </div>
     <div class="card-body">
       <div id="stmpZoneWrap">
         <div class="upload-zone" onclick="document.getElementById('stmpInput').click()">
           <div class="uz-icon">🔵</div>
-          <div class="uz-title">PNG с прозрачным фоном</div>
-          <div class="uz-sub">или обработайте фото ниже</div>
+          <div class="uz-title" data-i18n="uploadImgTitle">PNG с прозрачным фоном</div>
+          <div class="uz-sub" data-i18n="uploadImgSub">или обработайте фото ниже</div>
           <input type="file" id="stmpInput" accept="image/*">
         </div>
-        <button class="btn-process" onclick="openProcessor('stmp')">✨ Загрузить фото и убрать фон</button>
+        <button class="btn-process" onclick="openProcessor('stmp')"><span data-i18n="btnProcessUpload">✨ Загрузить фото и убрать фон</span></button>
       </div>
       <div id="stmpLoaded" style="display:none">
         <img id="stmpPreview" class="preview-img">
@@ -351,10 +399,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
           <div class="file-info"><div class="file-name" id="stmpName">—</div></div>
           <button class="file-del" onclick="clearImg('stmp')">✕</button>
         </div>
-        <button class="btn-process" onclick="openProcessor('stmp')">✨ Заменить / обработать</button>
+        <button class="btn-process" onclick="openProcessor('stmp')"><span data-i18n="btnProcessReplace">✨ Заменить / обработать</span></button>
       </div>
       <div class="size-grid one-col" style="margin-top:12px">
-        <div class="size-field"><label>Размер (мм)</label><input type="number" id="stmpSize" value="40" min="10" max="100"></div>
+        <div class="size-field"><label data-i18n="labelSizeMm">Размер (мм)</label><input type="number" id="stmpSize" value="40" min="10" max="100"></div>
       </div>
     </div>
   </div>
@@ -364,12 +412,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 <!-- SCREEN: VIEWER -->
 <div class="viewer-screen" id="screen-viewer">
   <div class="viewer-toolbar">
-    <button class="mode-chip active" id="modeBtn-sig" onclick="setMode('sig')">✍️ Подпись</button>
-    <button class="mode-chip" id="modeBtn-stmp" onclick="setMode('stmp')">🔵 Печать</button>
-    <button class="mode-chip" id="modeBtn-both" onclick="setMode('both')">✍️+🔵 Оба</button>
+    <button class="mode-chip active" id="modeBtn-sig" onclick="setMode('sig')" data-i18n="modeSig">✍️ Подпись</button>
+    <button class="mode-chip" id="modeBtn-stmp" onclick="setMode('stmp')" data-i18n="modeStamp">🔵 Печать</button>
+    <button class="mode-chip" id="modeBtn-both" onclick="setMode('both')" data-i18n="modeBoth">✍️+🔵 Оба</button>
     <label class="apply-all-row">
       <input type="checkbox" id="applyAllPages" style="accent-color:var(--accent)">
-      <span>Все стр.</span>
+      <span data-i18n="applyAll">Все стр.</span>
     </label>
     <div class="page-nav">
       <button onclick="changePage(-1)" id="prevBtn">◀</button>
@@ -390,36 +438,36 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
   <div id="listEmpty" style="display:none">
     <div class="empty-state">
       <div class="es-icon">📍</div>
-      <h2>Нет расстановки</h2>
-      <p>Откройте документ и кликните по странице чтобы поставить подпись или печать</p>
+      <h2 data-i18n="emptyPlacementTitle">Нет расстановки</h2>
+      <p data-i18n="emptyPlacementText">Откройте документ и кликните по странице чтобы поставить подпись или печать</p>
     </div>
   </div>
   <div id="listItems"></div>
   <div id="listHasItems" style="display:none">
-    <button class="btn btn-secondary" style="margin-top:4px" onclick="clearPlacements()">🗑 Очистить всё</button>
+    <button class="btn btn-secondary" style="margin-top:4px" onclick="clearPlacements()"><span data-i18n="btnClearAll">🗑 Очистить всё</span></button>
   </div>
 </div>
 
 <!-- SCREEN: ЭКСПОРТ -->
 <div class="screen" id="screen-export">
   <div class="card">
-    <div class="card-header"><span class="ch-icon">💾</span><span class="ch-title">Скачать PDF</span></div>
+    <div class="card-header"><span class="ch-icon">💾</span><span class="ch-title" data-i18n="cardExportTitle">Скачать PDF</span></div>
     <div class="card-body">
       <div id="exportReady" style="display:none">
         <div style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.5">
-          Все слои будут объединены.<br>Подписи и печати станут частью документа.
+          <span data-i18n-html="exportDescHtml">Все слои будут объединены.<br>Подписи и печати станут частью документа.</span>
         </div>
         <div id="exportSummary" style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:13px;line-height:1.8"></div>
         <button class="btn btn-primary" id="exportBtn" onclick="exportPdf()">
           <div class="spinner"></div>
-          <span class="btn-text">⬇️ Скачать PDF</span>
+          <span class="btn-text" data-i18n="btnDownloadPdf">⬇️ Скачать PDF</span>
         </button>
       </div>
       <div id="exportNotReady">
         <div class="empty-state" style="min-height:30vh">
           <div class="es-icon">💾</div>
-          <h2>Не готово</h2>
-          <p>Загрузите PDF, подпись или печать, затем расставьте их на страницах</p>
+          <h2 data-i18n="emptyExportTitle">Не готово</h2>
+          <p data-i18n="emptyExportText">Загрузите PDF, подпись или печать, затем расставьте их на страницах</p>
         </div>
       </div>
     </div>
@@ -430,20 +478,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 <div class="nav">
   <button class="nav-btn active" id="nav-doc" onclick="switchTab('doc')">
     <span class="nb-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg></span>
-    <span class="nb-label">Документ</span>
+    <span class="nb-label" data-i18n="navDoc">Документ</span>
   </button>
   <button class="nav-btn" id="nav-viewer" onclick="switchTab('viewer')">
     <span class="nb-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
-    <span class="nb-label">Редактор</span>
+    <span class="nb-label" data-i18n="navEditor">Редактор</span>
   </button>
   <button class="nav-btn" id="nav-list" onclick="switchTab('list')">
     <span class="nb-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span>
-    <span class="nb-label">Расстановка</span>
+    <span class="nb-label" data-i18n="navPlacement">Расстановка</span>
     <span class="badge" id="listBadge" style="display:none">0</span>
   </button>
   <button class="nav-btn" id="nav-export" onclick="switchTab('export')">
     <span class="nb-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></span>
-    <span class="nb-label">Сохранить</span>
+    <span class="nb-label" data-i18n="navSave">Сохранить</span>
   </button>
 </div>
 
@@ -451,35 +499,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 <div class="modal-overlay" id="processorModal">
   <div class="modal">
     <div class="modal-handle"></div>
-    <h2>✨ Убрать фон с фото</h2>
-    <p class="modal-sub">Загрузите фото подписи или печати — приложение уберёт фон и сохранит PNG</p>
+    <h2 data-i18n="modalBgTitle">✨ Убрать фон с фото</h2>
+    <p class="modal-sub" data-i18n="modalBgSub">Загрузите фото подписи или печати — приложение уберёт фон и сохранит PNG</p>
     <div class="mode-tabs">
-      <button class="mode-tab active" id="tab-auto" onclick="setProcessMode('auto')">🪄 Авто</button>
-      <button class="mode-tab" id="tab-light" onclick="setProcessMode('light')">☀️ Светлый фон</button>
-      <button class="mode-tab" id="tab-dark" onclick="setProcessMode('dark')">🌑 Тёмный фон</button>
+      <button class="mode-tab active" id="tab-auto" onclick="setProcessMode('auto')" data-i18n="tabAuto">🪄 Авто</button>
+      <button class="mode-tab" id="tab-light" onclick="setProcessMode('light')" data-i18n="tabLight">☀️ Светлый фон</button>
+      <button class="mode-tab" id="tab-dark" onclick="setProcessMode('dark')" data-i18n="tabDark">🌑 Тёмный фон</button>
     </div>
     <div class="slider-group">
-      <div class="sg-label">Порог удаления <span id="threshVal">30</span></div>
+      <div class="sg-label"><span data-i18n="sliderThreshold">Порог удаления</span> <span id="threshVal">30</span></div>
       <input type="range" id="threshSlider" min="5" max="120" value="30" oninput="updateThresh(this.value)">
-      <div class="slider-hint">Меньше — только фон. Больше — захватывает больше пикселей.</div>
+      <div class="slider-hint" data-i18n="sliderThresholdHint">Меньше — только фон. Больше — захватывает больше пикселей.</div>
     </div>
     <div class="slider-group">
-      <div class="sg-label">Смягчение краёв <span id="featherVal">2</span>px</div>
+      <div class="sg-label"><span data-i18n="sliderFeather">Смягчение краёв</span> <span id="featherVal">2</span>px</div>
       <input type="range" id="featherSlider" min="0" max="8" value="2" oninput="updateFeather(this.value)">
     </div>
-    <label style="display:block;margin-bottom:14px">
-      <button class="btn-process" onclick="document.getElementById('procInput').click()">📁 Выбрать фото</button>
-      <input type="file" id="procInput" accept="image/*" style="display:none" onchange="loadProcImage(this)">
-      <div id="procFileName" style="font-size:12px;color:var(--text2);margin-top:6px;text-align:center">файл не выбран</div>
-    </label>
+    <div style="display:flex;gap:8px;margin-bottom:6px">
+      <button class="btn-process" style="margin-top:0;flex:1" onclick="document.getElementById('procCamInput').click()"><span data-i18n="btnTakePhoto">📷 Камера</span></button>
+      <button class="btn-process" style="margin-top:0;flex:1" onclick="document.getElementById('procInput').click()"><span data-i18n="btnGallery">🖼 Галерея</span></button>
+    </div>
+    <input type="file" id="procCamInput" accept="image/*" capture="environment" style="display:none" onchange="loadProcImage(this)">
+    <input type="file" id="procInput" accept="image/*" style="display:none" onchange="loadProcImage(this)">
+    <div id="procFileName" style="font-size:12px;color:var(--text2);margin-bottom:14px;text-align:center">файл не выбран</div>
     <div class="compare-row">
-      <div class="compare-box"><div class="cb-label">Оригинал</div><canvas id="origCanvas"></canvas></div>
-      <div class="compare-box"><div class="cb-label">Результат</div><canvas id="resultCanvas"></canvas></div>
+      <div class="compare-box"><div class="cb-label" data-i18n="origLabel">Оригинал</div><canvas id="origCanvas"></canvas></div>
+      <div class="compare-box"><div class="cb-label" data-i18n="resultLabel">Результат</div><canvas id="resultCanvas"></canvas></div>
     </div>
     <div class="modal-btns">
-      <button class="btn btn-secondary" onclick="closeProcessor()">Отмена</button>
-      <button class="btn btn-primary" id="applyProcBtn" onclick="applyProcessed()" disabled>✅ Использовать</button>
+      <button class="btn btn-secondary" onclick="closeProcessor()"><span data-i18n="btnCancel">Отмена</span></button>
+      <button class="btn btn-primary" id="applyProcBtn" onclick="applyProcessed()" disabled><span data-i18n="btnUse">✅ Использовать</span></button>
     </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="langModal">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h2 data-i18n="langPickerTitle">Язык</h2>
+    <p class="modal-sub" data-i18n="langPickerSub">Выберите язык интерфейса</p>
+    <div id="langList" class="lang-list"></div>
   </div>
 </div>
 
@@ -493,8 +552,2160 @@ let pdfDoc=null,pdfBytes=null,currentPage=1,totalPages=1,scale=2;
 let mode='sig',placements=[],placementIdCounter=0;
 let sigDataUrl=null,stmpDataUrl=null;
 let canvasW=0,canvasH=0,canvasDisplayW=0;
+let currentLang='ru';
 const MM_TO_PT=2.8346;
-const LS={SIG:'sp_sig',SIGN:'sp_sig_name',STMP:'sp_stmp',STMPN:'sp_stmp_name'};
+const LS={SIG:'sp_sig',SIGN:'sp_sig_name',STMP:'sp_stmp',STMPN:'sp_stmp_name',LANG:'sp_lang'};
+
+// ── I18N ──
+const I18N = {
+  "ru": {
+    "navDoc": "Документ",
+    "navEditor": "Редактор",
+    "navPlacement": "Расстановка",
+    "navSave": "Сохранить",
+    "cardDocTitle": "PDF-документ",
+    "cardSigTitle": "Подпись",
+    "cardStampTitle": "Печать",
+    "cardExportTitle": "Скачать PDF",
+    "uploadPdfTitle": "Выбрать PDF",
+    "uploadPdfSub": "Нажмите или перетащите файл",
+    "btnPlaceSignatures": "Расставить подписи",
+    "uploadImgTitle": "PNG с прозрачным фоном",
+    "uploadImgSub": "или обработайте фото ниже",
+    "btnProcessUpload": "✨ Загрузить фото и убрать фон",
+    "btnProcessReplace": "✨ Заменить / обработать",
+    "labelWidthMm": "Ширина (мм)",
+    "labelHeightMm": "Высота (мм)",
+    "labelSizeMm": "Размер (мм)",
+    "modeSig": "✍️ Подпись",
+    "modeStamp": "🔵 Печать",
+    "modeBoth": "✍️+🔵 Оба",
+    "applyAll": "Все стр.",
+    "emptyPlacementTitle": "Нет расстановки",
+    "emptyPlacementText": "Откройте документ и кликните по странице чтобы поставить подпись или печать",
+    "btnClearAll": "🗑 Очистить всё",
+    "exportDescHtml": "Все слои будут объединены.<br>Подписи и печати станут частью документа.",
+    "emptyExportTitle": "Не готово",
+    "emptyExportText": "Загрузите PDF, подпись или печать, затем расставьте их на страницах",
+    "modalBgTitle": "✨ Убрать фон с фото",
+    "modalBgSub": "Загрузите фото подписи или печати — приложение уберёт фон и сохранит PNG",
+    "tabAuto": "🪄 Авто",
+    "tabLight": "☀️ Светлый фон",
+    "tabDark": "🌑 Тёмный фон",
+    "sliderThreshold": "Порог удаления",
+    "sliderThresholdHint": "Меньше — только фон. Больше — захватывает больше пикселей.",
+    "sliderFeather": "Смягчение краёв",
+    "btnChoosePhoto": "📁 Выбрать фото",
+    "btnCancel": "Отмена",
+    "btnUse": "✅ Использовать",
+    "langPickerTitle": "Язык",
+    "langPickerSub": "Выберите язык интерфейса",
+    "installTitle": "Установить приложение",
+    "exportTitle": "Скачать PDF",
+    "tagline": "Подпись и печать на PDF",
+    "noFileChosen": "файл не выбран",
+    "toastLoadingDoc": "Загружаю документ…",
+    "toastPdfError": "Ошибка загрузки PDF: ",
+    "toastDocLoaded": "Документ загружен",
+    "savedSuffix": "✓ сохранено",
+    "toastUploadedSaved": "Загружено и сохранено",
+    "savedWord": "сохранено",
+    "toastNeedSig": "Сначала загрузите подпись",
+    "toastNeedStamp": "Сначала загрузите печать",
+    "toastAddedPages": "Добавлено на {n} страниц",
+    "pagePrefix": "Стр.",
+    "unitMm": "мм",
+    "exportSigCount": "Подписей:",
+    "exportStampCount": "Печатей:",
+    "exportPageCount": "Страниц в документе:",
+    "exportProgress": "Страница {n}/{total}…",
+    "downloadFilePrefix": "подписан_",
+    "toastPdfSaved": "PDF сохранён — слои объединены!",
+    "toastError": "Ошибка: ",
+    "btnDownloadPdf": "⬇️ Скачать PDF",
+    "processedDefaultName": "обработанное",
+    "toastBgRemoved": "Фон убран! Изображение сохранено.",
+    "origLabel": "Оригинал",
+    "resultLabel": "Результат",
+    "toastLoadedFromMemory": "Подпись и печать загружены из памяти",
+    "orDivider": "или",
+    "btnTakePhoto": "📷 Камера",
+    "btnGallery": "🖼 Галерея",
+    "docPhotosHint": "Страниц отсканировано:",
+    "btnAddPage": "➕ Ещё страница",
+    "btnDocPhotosDone": "✅ Готово — создать PDF",
+    "scannedDocName": "Отсканированный документ"
+  },
+  "en": {
+    "navDoc": "Document",
+    "navEditor": "Editor",
+    "navPlacement": "Placement",
+    "navSave": "Save",
+    "cardDocTitle": "PDF document",
+    "cardSigTitle": "Signature",
+    "cardStampTitle": "Stamp",
+    "cardExportTitle": "Download PDF",
+    "uploadPdfTitle": "Choose PDF",
+    "uploadPdfSub": "Tap or drop a file",
+    "btnPlaceSignatures": "Place signatures",
+    "uploadImgTitle": "PNG with transparent background",
+    "uploadImgSub": "or process a photo below",
+    "btnProcessUpload": "✨ Upload photo & remove background",
+    "btnProcessReplace": "✨ Replace / edit",
+    "labelWidthMm": "Width (mm)",
+    "labelHeightMm": "Height (mm)",
+    "labelSizeMm": "Size (mm)",
+    "modeSig": "✍️ Signature",
+    "modeStamp": "🔵 Stamp",
+    "modeBoth": "✍️+🔵 Both",
+    "applyAll": "All pages",
+    "emptyPlacementTitle": "No placements yet",
+    "emptyPlacementText": "Open a document and tap the page to place a signature or stamp",
+    "btnClearAll": "🗑 Clear all",
+    "exportDescHtml": "All layers will be merged.<br>Signatures and stamps become part of the document.",
+    "emptyExportTitle": "Not ready",
+    "emptyExportText": "Upload a PDF, signature or stamp, then place them on the pages",
+    "modalBgTitle": "✨ Remove photo background",
+    "modalBgSub": "Upload a photo of the signature or stamp — the app will remove the background and save a PNG",
+    "tabAuto": "🪄 Auto",
+    "tabLight": "☀️ Light background",
+    "tabDark": "🌑 Dark background",
+    "sliderThreshold": "Removal threshold",
+    "sliderThresholdHint": "Lower — only the background. Higher — captures more pixels.",
+    "sliderFeather": "Edge softening",
+    "btnChoosePhoto": "📁 Choose photo",
+    "btnCancel": "Cancel",
+    "btnUse": "✅ Use",
+    "langPickerTitle": "Language",
+    "langPickerSub": "Choose the interface language",
+    "installTitle": "Install app",
+    "exportTitle": "Download PDF",
+    "tagline": "Signature and stamp on PDF",
+    "noFileChosen": "no file chosen",
+    "toastLoadingDoc": "Loading document…",
+    "toastPdfError": "Error loading PDF: ",
+    "toastDocLoaded": "Document loaded",
+    "savedSuffix": "✓ saved",
+    "toastUploadedSaved": "Uploaded and saved",
+    "savedWord": "saved",
+    "toastNeedSig": "Upload a signature first",
+    "toastNeedStamp": "Upload a stamp first",
+    "toastAddedPages": "Added to {n} pages",
+    "pagePrefix": "Page",
+    "unitMm": "mm",
+    "exportSigCount": "Signatures:",
+    "exportStampCount": "Stamps:",
+    "exportPageCount": "Pages in document:",
+    "exportProgress": "Page {n}/{total}…",
+    "downloadFilePrefix": "signed_",
+    "toastPdfSaved": "PDF saved — layers merged!",
+    "toastError": "Error: ",
+    "btnDownloadPdf": "⬇️ Download PDF",
+    "processedDefaultName": "processed",
+    "toastBgRemoved": "Background removed! Image saved.",
+    "origLabel": "Original",
+    "resultLabel": "Result",
+    "toastLoadedFromMemory": "Signature and stamp loaded from memory",
+    "orDivider": "or",
+    "btnTakePhoto": "📷 Camera",
+    "btnGallery": "🖼 Gallery",
+    "docPhotosHint": "Pages scanned:",
+    "btnAddPage": "➕ Add page",
+    "btnDocPhotosDone": "✅ Done — create PDF",
+    "scannedDocName": "Scanned document"
+  },
+  "fr": {
+    "navDoc": "Document",
+    "navEditor": "Éditeur",
+    "navPlacement": "Placement",
+    "navSave": "Enregistrer",
+    "cardDocTitle": "Document PDF",
+    "cardSigTitle": "Signature",
+    "cardStampTitle": "Cachet",
+    "cardExportTitle": "Télécharger le PDF",
+    "uploadPdfTitle": "Choisir un PDF",
+    "uploadPdfSub": "Appuyez ou déposez un fichier",
+    "btnPlaceSignatures": "Placer les signatures",
+    "uploadImgTitle": "PNG à fond transparent",
+    "uploadImgSub": "ou traitez une photo ci-dessous",
+    "btnProcessUpload": "✨ Importer une photo et retirer le fond",
+    "btnProcessReplace": "✨ Remplacer / modifier",
+    "labelWidthMm": "Largeur (mm)",
+    "labelHeightMm": "Hauteur (mm)",
+    "labelSizeMm": "Taille (mm)",
+    "modeSig": "✍️ Signature",
+    "modeStamp": "🔵 Cachet",
+    "modeBoth": "✍️+🔵 Les deux",
+    "applyAll": "Toutes pages",
+    "emptyPlacementTitle": "Aucun placement",
+    "emptyPlacementText": "Ouvrez un document et touchez la page pour placer une signature ou un cachet",
+    "btnClearAll": "🗑 Tout effacer",
+    "exportDescHtml": "Tous les calques seront fusionnés.<br>Les signatures et cachets feront partie du document.",
+    "emptyExportTitle": "Pas prêt",
+    "emptyExportText": "Importez un PDF, une signature ou un cachet, puis placez-les sur les pages",
+    "modalBgTitle": "✨ Retirer le fond de la photo",
+    "modalBgSub": "Importez une photo de la signature ou du cachet — l'appli retirera le fond et enregistrera un PNG",
+    "tabAuto": "🪄 Auto",
+    "tabLight": "☀️ Fond clair",
+    "tabDark": "🌑 Fond sombre",
+    "sliderThreshold": "Seuil de suppression",
+    "sliderThresholdHint": "Plus bas — seulement le fond. Plus haut — capture plus de pixels.",
+    "sliderFeather": "Adoucissement des bords",
+    "btnChoosePhoto": "📁 Choisir une photo",
+    "btnCancel": "Annuler",
+    "btnUse": "✅ Utiliser",
+    "langPickerTitle": "Langue",
+    "langPickerSub": "Choisissez la langue de l'interface",
+    "installTitle": "Installer l'application",
+    "exportTitle": "Télécharger le PDF",
+    "tagline": "Signature et cachet sur PDF",
+    "noFileChosen": "aucun fichier choisi",
+    "toastLoadingDoc": "Chargement du document…",
+    "toastPdfError": "Erreur de chargement du PDF : ",
+    "toastDocLoaded": "Document chargé",
+    "savedSuffix": "✓ enregistré",
+    "toastUploadedSaved": "Importé et enregistré",
+    "savedWord": "enregistré",
+    "toastNeedSig": "Importez d'abord une signature",
+    "toastNeedStamp": "Importez d'abord un cachet",
+    "toastAddedPages": "Ajouté sur {n} pages",
+    "pagePrefix": "Page",
+    "unitMm": "mm",
+    "exportSigCount": "Signatures :",
+    "exportStampCount": "Cachets :",
+    "exportPageCount": "Pages dans le document :",
+    "exportProgress": "Page {n}/{total}…",
+    "downloadFilePrefix": "signe_",
+    "toastPdfSaved": "PDF enregistré — calques fusionnés !",
+    "toastError": "Erreur : ",
+    "btnDownloadPdf": "⬇️ Télécharger le PDF",
+    "processedDefaultName": "traité",
+    "toastBgRemoved": "Fond retiré ! Image enregistrée.",
+    "origLabel": "Original",
+    "resultLabel": "Résultat",
+    "toastLoadedFromMemory": "Signature et cachet chargés depuis la mémoire",
+    "orDivider": "ou",
+    "btnTakePhoto": "📷 Appareil photo",
+    "btnGallery": "🖼 Galerie",
+    "docPhotosHint": "Pages scannées :",
+    "btnAddPage": "➕ Ajouter une page",
+    "btnDocPhotosDone": "✅ Terminé — créer le PDF",
+    "scannedDocName": "Document scanné"
+  },
+  "de": {
+    "navDoc": "Dokument",
+    "navEditor": "Editor",
+    "navPlacement": "Platzierung",
+    "navSave": "Speichern",
+    "cardDocTitle": "PDF-Dokument",
+    "cardSigTitle": "Unterschrift",
+    "cardStampTitle": "Stempel",
+    "cardExportTitle": "PDF herunterladen",
+    "uploadPdfTitle": "PDF auswählen",
+    "uploadPdfSub": "Tippen oder Datei ablegen",
+    "btnPlaceSignatures": "Unterschriften platzieren",
+    "uploadImgTitle": "PNG mit transparentem Hintergrund",
+    "uploadImgSub": "oder Foto unten bearbeiten",
+    "btnProcessUpload": "✨ Foto hochladen & Hintergrund entfernen",
+    "btnProcessReplace": "✨ Ersetzen / bearbeiten",
+    "labelWidthMm": "Breite (mm)",
+    "labelHeightMm": "Höhe (mm)",
+    "labelSizeMm": "Größe (mm)",
+    "modeSig": "✍️ Unterschrift",
+    "modeStamp": "🔵 Stempel",
+    "modeBoth": "✍️+🔵 Beides",
+    "applyAll": "Alle Seiten",
+    "emptyPlacementTitle": "Keine Platzierung",
+    "emptyPlacementText": "Öffnen Sie ein Dokument und tippen Sie auf die Seite, um Unterschrift oder Stempel zu setzen",
+    "btnClearAll": "🗑 Alles löschen",
+    "exportDescHtml": "Alle Ebenen werden zusammengeführt.<br>Unterschriften und Stempel werden Teil des Dokuments.",
+    "emptyExportTitle": "Nicht bereit",
+    "emptyExportText": "Laden Sie ein PDF, eine Unterschrift oder einen Stempel hoch und platzieren Sie sie auf den Seiten",
+    "modalBgTitle": "✨ Fotohintergrund entfernen",
+    "modalBgSub": "Laden Sie ein Foto der Unterschrift oder des Stempels hoch — die App entfernt den Hintergrund und speichert ein PNG",
+    "tabAuto": "🪄 Automatisch",
+    "tabLight": "☀️ Heller Hintergrund",
+    "tabDark": "🌑 Dunkler Hintergrund",
+    "sliderThreshold": "Entfernungsschwelle",
+    "sliderThresholdHint": "Niedriger — nur der Hintergrund. Höher — erfasst mehr Pixel.",
+    "sliderFeather": "Kantenweichzeichnung",
+    "btnChoosePhoto": "📁 Foto auswählen",
+    "btnCancel": "Abbrechen",
+    "btnUse": "✅ Verwenden",
+    "langPickerTitle": "Sprache",
+    "langPickerSub": "Wählen Sie die Sprache der Oberfläche",
+    "installTitle": "App installieren",
+    "exportTitle": "PDF herunterladen",
+    "tagline": "Unterschrift und Stempel auf PDF",
+    "noFileChosen": "keine Datei ausgewählt",
+    "toastLoadingDoc": "Dokument wird geladen…",
+    "toastPdfError": "Fehler beim Laden des PDF: ",
+    "toastDocLoaded": "Dokument geladen",
+    "savedSuffix": "✓ gespeichert",
+    "toastUploadedSaved": "Hochgeladen und gespeichert",
+    "savedWord": "gespeichert",
+    "toastNeedSig": "Zuerst eine Unterschrift hochladen",
+    "toastNeedStamp": "Zuerst einen Stempel hochladen",
+    "toastAddedPages": "Zu {n} Seiten hinzugefügt",
+    "pagePrefix": "Seite",
+    "unitMm": "mm",
+    "exportSigCount": "Unterschriften:",
+    "exportStampCount": "Stempel:",
+    "exportPageCount": "Seiten im Dokument:",
+    "exportProgress": "Seite {n}/{total}…",
+    "downloadFilePrefix": "signiert_",
+    "toastPdfSaved": "PDF gespeichert — Ebenen zusammengeführt!",
+    "toastError": "Fehler: ",
+    "btnDownloadPdf": "⬇️ PDF herunterladen",
+    "processedDefaultName": "bearbeitet",
+    "toastBgRemoved": "Hintergrund entfernt! Bild gespeichert.",
+    "origLabel": "Original",
+    "resultLabel": "Ergebnis",
+    "toastLoadedFromMemory": "Unterschrift und Stempel aus dem Speicher geladen",
+    "orDivider": "oder",
+    "btnTakePhoto": "📷 Kamera",
+    "btnGallery": "🖼 Galerie",
+    "docPhotosHint": "Gescannte Seiten:",
+    "btnAddPage": "➕ Seite hinzufügen",
+    "btnDocPhotosDone": "✅ Fertig — PDF erstellen",
+    "scannedDocName": "Gescanntes Dokument"
+  },
+  "es": {
+    "navDoc": "Documento",
+    "navEditor": "Editor",
+    "navPlacement": "Colocación",
+    "navSave": "Guardar",
+    "cardDocTitle": "Documento PDF",
+    "cardSigTitle": "Firma",
+    "cardStampTitle": "Sello",
+    "cardExportTitle": "Descargar PDF",
+    "uploadPdfTitle": "Elegir PDF",
+    "uploadPdfSub": "Toca o suelta un archivo",
+    "btnPlaceSignatures": "Colocar firmas",
+    "uploadImgTitle": "PNG con fondo transparente",
+    "uploadImgSub": "o procesa una foto abajo",
+    "btnProcessUpload": "✨ Subir foto y quitar fondo",
+    "btnProcessReplace": "✨ Reemplazar / editar",
+    "labelWidthMm": "Ancho (mm)",
+    "labelHeightMm": "Alto (mm)",
+    "labelSizeMm": "Tamaño (mm)",
+    "modeSig": "✍️ Firma",
+    "modeStamp": "🔵 Sello",
+    "modeBoth": "✍️+🔵 Ambos",
+    "applyAll": "Todas páginas",
+    "emptyPlacementTitle": "Sin colocaciones",
+    "emptyPlacementText": "Abra un documento y toque la página para colocar una firma o un sello",
+    "btnClearAll": "🗑 Borrar todo",
+    "exportDescHtml": "Todas las capas se combinarán.<br>Firmas y sellos pasarán a formar parte del documento.",
+    "emptyExportTitle": "No listo",
+    "emptyExportText": "Sube un PDF, firma o sello y luego colócalos en las páginas",
+    "modalBgTitle": "✨ Quitar fondo de la foto",
+    "modalBgSub": "Sube una foto de la firma o el sello: la app quitará el fondo y guardará un PNG",
+    "tabAuto": "🪄 Automático",
+    "tabLight": "☀️ Fondo claro",
+    "tabDark": "🌑 Fondo oscuro",
+    "sliderThreshold": "Umbral de eliminación",
+    "sliderThresholdHint": "Menor — solo el fondo. Mayor — captura más píxeles.",
+    "sliderFeather": "Suavizado de bordes",
+    "btnChoosePhoto": "📁 Elegir foto",
+    "btnCancel": "Cancelar",
+    "btnUse": "✅ Usar",
+    "langPickerTitle": "Idioma",
+    "langPickerSub": "Elige el idioma de la interfaz",
+    "installTitle": "Instalar app",
+    "exportTitle": "Descargar PDF",
+    "tagline": "Firma y sello en PDF",
+    "noFileChosen": "ningún archivo elegido",
+    "toastLoadingDoc": "Cargando documento…",
+    "toastPdfError": "Error al cargar el PDF: ",
+    "toastDocLoaded": "Documento cargado",
+    "savedSuffix": "✓ guardado",
+    "toastUploadedSaved": "Subido y guardado",
+    "savedWord": "guardado",
+    "toastNeedSig": "Primero sube una firma",
+    "toastNeedStamp": "Primero sube un sello",
+    "toastAddedPages": "Añadido a {n} páginas",
+    "pagePrefix": "Pág.",
+    "unitMm": "mm",
+    "exportSigCount": "Firmas:",
+    "exportStampCount": "Sellos:",
+    "exportPageCount": "Páginas en el documento:",
+    "exportProgress": "Página {n}/{total}…",
+    "downloadFilePrefix": "firmado_",
+    "toastPdfSaved": "PDF guardado: capas combinadas!",
+    "toastError": "Error: ",
+    "btnDownloadPdf": "⬇️ Descargar PDF",
+    "processedDefaultName": "procesado",
+    "toastBgRemoved": "¡Fondo eliminado! Imagen guardada.",
+    "origLabel": "Original",
+    "resultLabel": "Resultado",
+    "toastLoadedFromMemory": "Firma y sello cargados desde la memoria",
+    "orDivider": "o",
+    "btnTakePhoto": "📷 Cámara",
+    "btnGallery": "🖼 Galería",
+    "docPhotosHint": "Páginas escaneadas:",
+    "btnAddPage": "➕ Añadir página",
+    "btnDocPhotosDone": "✅ Listo — crear PDF",
+    "scannedDocName": "Documento escaneado"
+  },
+  "it": {
+    "navDoc": "Documento",
+    "navEditor": "Editor",
+    "navPlacement": "Posizionamento",
+    "navSave": "Salva",
+    "cardDocTitle": "Documento PDF",
+    "cardSigTitle": "Firma",
+    "cardStampTitle": "Timbro",
+    "cardExportTitle": "Scarica PDF",
+    "uploadPdfTitle": "Scegli PDF",
+    "uploadPdfSub": "Tocca o trascina un file",
+    "btnPlaceSignatures": "Posiziona firme",
+    "uploadImgTitle": "PNG con sfondo trasparente",
+    "uploadImgSub": "oppure elabora una foto qui sotto",
+    "btnProcessUpload": "✨ Carica foto e rimuovi sfondo",
+    "btnProcessReplace": "✨ Sostituisci / modifica",
+    "labelWidthMm": "Larghezza (mm)",
+    "labelHeightMm": "Altezza (mm)",
+    "labelSizeMm": "Dimensione (mm)",
+    "modeSig": "✍️ Firma",
+    "modeStamp": "🔵 Timbro",
+    "modeBoth": "✍️+🔵 Entrambi",
+    "applyAll": "Tutte le pagine",
+    "emptyPlacementTitle": "Nessun posizionamento",
+    "emptyPlacementText": "Apri un documento e tocca la pagina per posizionare firma o timbro",
+    "btnClearAll": "🗑 Cancella tutto",
+    "exportDescHtml": "Tutti i livelli verranno uniti.<br>Firme e timbri diventeranno parte del documento.",
+    "emptyExportTitle": "Non pronto",
+    "emptyExportText": "Carica un PDF, una firma o un timbro, poi posizionali sulle pagine",
+    "modalBgTitle": "✨ Rimuovi sfondo dalla foto",
+    "modalBgSub": "Carica una foto della firma o del timbro: l'app rimuoverà lo sfondo e salverà un PNG",
+    "tabAuto": "🪄 Automatico",
+    "tabLight": "☀️ Sfondo chiaro",
+    "tabDark": "🌑 Sfondo scuro",
+    "sliderThreshold": "Soglia di rimozione",
+    "sliderThresholdHint": "Più basso — solo lo sfondo. Più alto — cattura più pixel.",
+    "sliderFeather": "Ammorbidimento bordi",
+    "btnChoosePhoto": "📁 Scegli foto",
+    "btnCancel": "Annulla",
+    "btnUse": "✅ Usa",
+    "langPickerTitle": "Lingua",
+    "langPickerSub": "Scegli la lingua dell'interfaccia",
+    "installTitle": "Installa app",
+    "exportTitle": "Scarica PDF",
+    "tagline": "Firma e timbro su PDF",
+    "noFileChosen": "nessun file scelto",
+    "toastLoadingDoc": "Caricamento documento…",
+    "toastPdfError": "Errore nel caricamento del PDF: ",
+    "toastDocLoaded": "Documento caricato",
+    "savedSuffix": "✓ salvato",
+    "toastUploadedSaved": "Caricato e salvato",
+    "savedWord": "salvato",
+    "toastNeedSig": "Carica prima una firma",
+    "toastNeedStamp": "Carica prima un timbro",
+    "toastAddedPages": "Aggiunto a {n} pagine",
+    "pagePrefix": "Pag.",
+    "unitMm": "mm",
+    "exportSigCount": "Firme:",
+    "exportStampCount": "Timbri:",
+    "exportPageCount": "Pagine nel documento:",
+    "exportProgress": "Pagina {n}/{total}…",
+    "downloadFilePrefix": "firmato_",
+    "toastPdfSaved": "PDF salvato — livelli uniti!",
+    "toastError": "Errore: ",
+    "btnDownloadPdf": "⬇️ Scarica PDF",
+    "processedDefaultName": "elaborato",
+    "toastBgRemoved": "Sfondo rimosso! Immagine salvata.",
+    "origLabel": "Originale",
+    "resultLabel": "Risultato",
+    "toastLoadedFromMemory": "Firma e timbro caricati dalla memoria",
+    "orDivider": "o",
+    "btnTakePhoto": "📷 Fotocamera",
+    "btnGallery": "🖼 Galleria",
+    "docPhotosHint": "Pagine scansionate:",
+    "btnAddPage": "➕ Aggiungi pagina",
+    "btnDocPhotosDone": "✅ Fatto — crea PDF",
+    "scannedDocName": "Documento scansionato"
+  },
+  "pt": {
+    "navDoc": "Documento",
+    "navEditor": "Editor",
+    "navPlacement": "Posicionamento",
+    "navSave": "Salvar",
+    "cardDocTitle": "Documento PDF",
+    "cardSigTitle": "Assinatura",
+    "cardStampTitle": "Carimbo",
+    "cardExportTitle": "Baixar PDF",
+    "uploadPdfTitle": "Escolher PDF",
+    "uploadPdfSub": "Toque ou solte um arquivo",
+    "btnPlaceSignatures": "Posicionar assinaturas",
+    "uploadImgTitle": "PNG com fundo transparente",
+    "uploadImgSub": "ou processe uma foto abaixo",
+    "btnProcessUpload": "✨ Enviar foto e remover fundo",
+    "btnProcessReplace": "✨ Substituir / editar",
+    "labelWidthMm": "Largura (mm)",
+    "labelHeightMm": "Altura (mm)",
+    "labelSizeMm": "Tamanho (mm)",
+    "modeSig": "✍️ Assinatura",
+    "modeStamp": "🔵 Carimbo",
+    "modeBoth": "✍️+🔵 Ambos",
+    "applyAll": "Todas páginas",
+    "emptyPlacementTitle": "Nenhum posicionamento",
+    "emptyPlacementText": "Abra um documento e toque na página para colocar assinatura ou carimbo",
+    "btnClearAll": "🗑 Limpar tudo",
+    "exportDescHtml": "Todas as camadas serão mescladas.<br>Assinaturas e carimbos passam a fazer parte do documento.",
+    "emptyExportTitle": "Não pronto",
+    "emptyExportText": "Envie um PDF, assinatura ou carimbo e depois posicione-os nas páginas",
+    "modalBgTitle": "✨ Remover fundo da foto",
+    "modalBgSub": "Envie uma foto da assinatura ou carimbo — o app removerá o fundo e salvará um PNG",
+    "tabAuto": "🪄 Automático",
+    "tabLight": "☀️ Fundo claro",
+    "tabDark": "🌑 Fundo escuro",
+    "sliderThreshold": "Limite de remoção",
+    "sliderThresholdHint": "Menor — apenas o fundo. Maior — captura mais pixels.",
+    "sliderFeather": "Suavização de bordas",
+    "btnChoosePhoto": "📁 Escolher foto",
+    "btnCancel": "Cancelar",
+    "btnUse": "✅ Usar",
+    "langPickerTitle": "Idioma",
+    "langPickerSub": "Escolha o idioma da interface",
+    "installTitle": "Instalar app",
+    "exportTitle": "Baixar PDF",
+    "tagline": "Assinatura e carimbo em PDF",
+    "noFileChosen": "nenhum arquivo escolhido",
+    "toastLoadingDoc": "Carregando documento…",
+    "toastPdfError": "Erro ao carregar o PDF: ",
+    "toastDocLoaded": "Documento carregado",
+    "savedSuffix": "✓ salvo",
+    "toastUploadedSaved": "Enviado e salvo",
+    "savedWord": "salvo",
+    "toastNeedSig": "Envie uma assinatura primeiro",
+    "toastNeedStamp": "Envie um carimbo primeiro",
+    "toastAddedPages": "Adicionado a {n} páginas",
+    "pagePrefix": "Pág.",
+    "unitMm": "mm",
+    "exportSigCount": "Assinaturas:",
+    "exportStampCount": "Carimbos:",
+    "exportPageCount": "Páginas no documento:",
+    "exportProgress": "Página {n}/{total}…",
+    "downloadFilePrefix": "assinado_",
+    "toastPdfSaved": "PDF salvo — camadas mescladas!",
+    "toastError": "Erro: ",
+    "btnDownloadPdf": "⬇️ Baixar PDF",
+    "processedDefaultName": "processado",
+    "toastBgRemoved": "Fundo removido! Imagem salva.",
+    "origLabel": "Original",
+    "resultLabel": "Resultado",
+    "toastLoadedFromMemory": "Assinatura e carimbo carregados da memória",
+    "orDivider": "ou",
+    "btnTakePhoto": "📷 Câmera",
+    "btnGallery": "🖼 Galeria",
+    "docPhotosHint": "Páginas digitalizadas:",
+    "btnAddPage": "➕ Adicionar página",
+    "btnDocPhotosDone": "✅ Concluído — criar PDF",
+    "scannedDocName": "Documento digitalizado"
+  },
+  "uk": {
+    "navDoc": "Документ",
+    "navEditor": "Редактор",
+    "navPlacement": "Розміщення",
+    "navSave": "Зберегти",
+    "cardDocTitle": "PDF-документ",
+    "cardSigTitle": "Підпис",
+    "cardStampTitle": "Печатка",
+    "cardExportTitle": "Завантажити PDF",
+    "uploadPdfTitle": "Обрати PDF",
+    "uploadPdfSub": "Натисніть або перетягніть файл",
+    "btnPlaceSignatures": "Розмістити підписи",
+    "uploadImgTitle": "PNG з прозорим фоном",
+    "uploadImgSub": "або обробіть фото нижче",
+    "btnProcessUpload": "✨ Завантажити фото і прибрати фон",
+    "btnProcessReplace": "✨ Замінити / обробити",
+    "labelWidthMm": "Ширина (мм)",
+    "labelHeightMm": "Висота (мм)",
+    "labelSizeMm": "Розмір (мм)",
+    "modeSig": "✍️ Підпис",
+    "modeStamp": "🔵 Печатка",
+    "modeBoth": "✍️+🔵 Обидва",
+    "applyAll": "Усі стор.",
+    "emptyPlacementTitle": "Немає розміщень",
+    "emptyPlacementText": "Відкрийте документ і натисніть на сторінку, щоб поставити підпис або печатку",
+    "btnClearAll": "🗑 Очистити все",
+    "exportDescHtml": "Усі шари буде об'єднано.<br>Підписи й печатки стануть частиною документа.",
+    "emptyExportTitle": "Не готово",
+    "emptyExportText": "Завантажте PDF, підпис або печатку, а потім розмістіть їх на сторінках",
+    "modalBgTitle": "✨ Прибрати фон із фото",
+    "modalBgSub": "Завантажте фото підпису або печатки — застосунок прибере фон і збереже PNG",
+    "tabAuto": "🪄 Авто",
+    "tabLight": "☀️ Світлий фон",
+    "tabDark": "🌑 Темний фон",
+    "sliderThreshold": "Поріг видалення",
+    "sliderThresholdHint": "Менше — лише фон. Більше — захоплює більше пікселів.",
+    "sliderFeather": "Пом'якшення країв",
+    "btnChoosePhoto": "📁 Обрати фото",
+    "btnCancel": "Скасувати",
+    "btnUse": "✅ Використати",
+    "langPickerTitle": "Мова",
+    "langPickerSub": "Оберіть мову інтерфейсу",
+    "installTitle": "Встановити застосунок",
+    "exportTitle": "Завантажити PDF",
+    "tagline": "Підпис і печатка на PDF",
+    "noFileChosen": "файл не обрано",
+    "toastLoadingDoc": "Завантажую документ…",
+    "toastPdfError": "Помилка завантаження PDF: ",
+    "toastDocLoaded": "Документ завантажено",
+    "savedSuffix": "✓ збережено",
+    "toastUploadedSaved": "Завантажено і збережено",
+    "savedWord": "збережено",
+    "toastNeedSig": "Спершу завантажте підпис",
+    "toastNeedStamp": "Спершу завантажте печатку",
+    "toastAddedPages": "Додано на {n} стор.",
+    "pagePrefix": "Стор.",
+    "unitMm": "мм",
+    "exportSigCount": "Підписів:",
+    "exportStampCount": "Печаток:",
+    "exportPageCount": "Сторінок у документі:",
+    "exportProgress": "Сторінка {n}/{total}…",
+    "downloadFilePrefix": "підписано_",
+    "toastPdfSaved": "PDF збережено — шари об'єднано!",
+    "toastError": "Помилка: ",
+    "btnDownloadPdf": "⬇️ Завантажити PDF",
+    "processedDefaultName": "оброблено",
+    "toastBgRemoved": "Фон прибрано! Зображення збережено.",
+    "origLabel": "Оригінал",
+    "resultLabel": "Результат",
+    "toastLoadedFromMemory": "Підпис і печатку завантажено з пам'яті",
+    "orDivider": "або",
+    "btnTakePhoto": "📷 Камера",
+    "btnGallery": "🖼 Галерея",
+    "docPhotosHint": "Сторінок відскановано:",
+    "btnAddPage": "➕ Ще сторінка",
+    "btnDocPhotosDone": "✅ Готово — створити PDF",
+    "scannedDocName": "Відсканований документ"
+  },
+  "pl": {
+    "navDoc": "Dokument",
+    "navEditor": "Edytor",
+    "navPlacement": "Rozmieszczenie",
+    "navSave": "Zapisz",
+    "cardDocTitle": "Dokument PDF",
+    "cardSigTitle": "Podpis",
+    "cardStampTitle": "Pieczątka",
+    "cardExportTitle": "Pobierz PDF",
+    "uploadPdfTitle": "Wybierz PDF",
+    "uploadPdfSub": "Dotknij lub upuść plik",
+    "btnPlaceSignatures": "Rozmieść podpisy",
+    "uploadImgTitle": "PNG z przezroczystym tłem",
+    "uploadImgSub": "lub przetwórz zdjęcie poniżej",
+    "btnProcessUpload": "✨ Wgraj zdjęcie i usuń tło",
+    "btnProcessReplace": "✨ Zamień / edytuj",
+    "labelWidthMm": "Szerokość (mm)",
+    "labelHeightMm": "Wysokość (mm)",
+    "labelSizeMm": "Rozmiar (mm)",
+    "modeSig": "✍️ Podpis",
+    "modeStamp": "🔵 Pieczątka",
+    "modeBoth": "✍️+🔵 Oba",
+    "applyAll": "Wszystkie str.",
+    "emptyPlacementTitle": "Brak rozmieszczenia",
+    "emptyPlacementText": "Otwórz dokument i dotknij strony, aby umieścić podpis lub pieczątkę",
+    "btnClearAll": "🗑 Wyczyść wszystko",
+    "exportDescHtml": "Wszystkie warstwy zostaną scalone.<br>Podpisy i pieczątki staną się częścią dokumentu.",
+    "emptyExportTitle": "Nie gotowe",
+    "emptyExportText": "Wgraj PDF, podpis lub pieczątkę, a potem umieść je na stronach",
+    "modalBgTitle": "✨ Usuń tło ze zdjęcia",
+    "modalBgSub": "Wgraj zdjęcie podpisu lub pieczątki — aplikacja usunie tło i zapisze plik PNG",
+    "tabAuto": "🪄 Automatycznie",
+    "tabLight": "☀️ Jasne tło",
+    "tabDark": "🌑 Ciemne tło",
+    "sliderThreshold": "Próg usuwania",
+    "sliderThresholdHint": "Mniej — tylko tło. Więcej — obejmuje więcej pikseli.",
+    "sliderFeather": "Wygładzanie krawędzi",
+    "btnChoosePhoto": "📁 Wybierz zdjęcie",
+    "btnCancel": "Anuluj",
+    "btnUse": "✅ Użyj",
+    "langPickerTitle": "Język",
+    "langPickerSub": "Wybierz język interfejsu",
+    "installTitle": "Zainstaluj aplikację",
+    "exportTitle": "Pobierz PDF",
+    "tagline": "Podpis i pieczątka na PDF",
+    "noFileChosen": "nie wybrano pliku",
+    "toastLoadingDoc": "Wczytywanie dokumentu…",
+    "toastPdfError": "Błąd wczytywania PDF: ",
+    "toastDocLoaded": "Dokument wczytany",
+    "savedSuffix": "✓ zapisano",
+    "toastUploadedSaved": "Wgrano i zapisano",
+    "savedWord": "zapisano",
+    "toastNeedSig": "Najpierw wgraj podpis",
+    "toastNeedStamp": "Najpierw wgraj pieczątkę",
+    "toastAddedPages": "Dodano do {n} stron",
+    "pagePrefix": "Str.",
+    "unitMm": "mm",
+    "exportSigCount": "Podpisy:",
+    "exportStampCount": "Pieczątki:",
+    "exportPageCount": "Stron w dokumencie:",
+    "exportProgress": "Strona {n}/{total}…",
+    "downloadFilePrefix": "podpisano_",
+    "toastPdfSaved": "PDF zapisany — warstwy scalone!",
+    "toastError": "Błąd: ",
+    "btnDownloadPdf": "⬇️ Pobierz PDF",
+    "processedDefaultName": "przetworzone",
+    "toastBgRemoved": "Tło usunięte! Obraz zapisany.",
+    "origLabel": "Oryginał",
+    "resultLabel": "Wynik",
+    "toastLoadedFromMemory": "Podpis i pieczątka wczytane z pamięci",
+    "orDivider": "lub",
+    "btnTakePhoto": "📷 Aparat",
+    "btnGallery": "🖼 Galeria",
+    "docPhotosHint": "Zeskanowane strony:",
+    "btnAddPage": "➕ Dodaj stronę",
+    "btnDocPhotosDone": "✅ Gotowe — utwórz PDF",
+    "scannedDocName": "Zeskanowany dokument"
+  },
+  "tr": {
+    "navDoc": "Belge",
+    "navEditor": "Düzenleyici",
+    "navPlacement": "Yerleşim",
+    "navSave": "Kaydet",
+    "cardDocTitle": "PDF belgesi",
+    "cardSigTitle": "İmza",
+    "cardStampTitle": "Kaşe",
+    "cardExportTitle": "PDF indir",
+    "uploadPdfTitle": "PDF seç",
+    "uploadPdfSub": "Dokun veya dosya bırak",
+    "btnPlaceSignatures": "İmzaları yerleştir",
+    "uploadImgTitle": "Şeffaf arka planlı PNG",
+    "uploadImgSub": "veya aşağıda bir fotoğraf işleyin",
+    "btnProcessUpload": "✨ Fotoğraf yükle ve arka planı kaldır",
+    "btnProcessReplace": "✨ Değiştir / düzenle",
+    "labelWidthMm": "Genişlik (mm)",
+    "labelHeightMm": "Yükseklik (mm)",
+    "labelSizeMm": "Boyut (mm)",
+    "modeSig": "✍️ İmza",
+    "modeStamp": "🔵 Kaşe",
+    "modeBoth": "✍️+🔵 İkisi de",
+    "applyAll": "Tüm sayfalar",
+    "emptyPlacementTitle": "Yerleşim yok",
+    "emptyPlacementText": "Bir belge açın ve imza veya kaşe koymak için sayfaya dokunun",
+    "btnClearAll": "🗑 Tümünü temizle",
+    "exportDescHtml": "Tüm katmanlar birleştirilecek.<br>İmzalar ve kaşeler belgenin parçası olacak.",
+    "emptyExportTitle": "Hazır değil",
+    "emptyExportText": "Bir PDF, imza veya kaşe yükleyin, ardından sayfalara yerleştirin",
+    "modalBgTitle": "✨ Fotoğraftan arka planı kaldır",
+    "modalBgSub": "İmza veya kaşenin fotoğrafını yükleyin — uygulama arka planı kaldırıp PNG olarak kaydeder",
+    "tabAuto": "🪄 Otomatik",
+    "tabLight": "☀️ Açık arka plan",
+    "tabDark": "🌑 Koyu arka plan",
+    "sliderThreshold": "Kaldırma eşiği",
+    "sliderThresholdHint": "Düşük — yalnızca arka plan. Yüksek — daha fazla piksel yakalar.",
+    "sliderFeather": "Kenar yumuşatma",
+    "btnChoosePhoto": "📁 Fotoğraf seç",
+    "btnCancel": "İptal",
+    "btnUse": "✅ Kullan",
+    "langPickerTitle": "Dil",
+    "langPickerSub": "Arayüz dilini seçin",
+    "installTitle": "Uygulamayı yükle",
+    "exportTitle": "PDF indir",
+    "tagline": "PDF üzerinde imza ve kaşe",
+    "noFileChosen": "dosya seçilmedi",
+    "toastLoadingDoc": "Belge yükleniyor…",
+    "toastPdfError": "PDF yüklenirken hata: ",
+    "toastDocLoaded": "Belge yüklendi",
+    "savedSuffix": "✓ kaydedildi",
+    "toastUploadedSaved": "Yüklendi ve kaydedildi",
+    "savedWord": "kaydedildi",
+    "toastNeedSig": "Önce bir imza yükleyin",
+    "toastNeedStamp": "Önce bir kaşe yükleyin",
+    "toastAddedPages": "{n} sayfaya eklendi",
+    "pagePrefix": "Sayfa",
+    "unitMm": "mm",
+    "exportSigCount": "İmzalar:",
+    "exportStampCount": "Kaşeler:",
+    "exportPageCount": "Belgedeki sayfa sayısı:",
+    "exportProgress": "Sayfa {n}/{total}…",
+    "downloadFilePrefix": "imzali_",
+    "toastPdfSaved": "PDF kaydedildi — katmanlar birleştirildi!",
+    "toastError": "Hata: ",
+    "btnDownloadPdf": "⬇️ PDF indir",
+    "processedDefaultName": "işlenmiş",
+    "toastBgRemoved": "Arka plan kaldırıldı! Görsel kaydedildi.",
+    "origLabel": "Orijinal",
+    "resultLabel": "Sonuç",
+    "toastLoadedFromMemory": "İmza ve kaşe bellekten yüklendi",
+    "orDivider": "veya",
+    "btnTakePhoto": "📷 Kamera",
+    "btnGallery": "🖼 Galeri",
+    "docPhotosHint": "Taranan sayfa:",
+    "btnAddPage": "➕ Sayfa ekle",
+    "btnDocPhotosDone": "✅ Bitti — PDF oluştur",
+    "scannedDocName": "Taranan belge"
+  },
+  "ar": {
+    "navDoc": "المستند",
+    "navEditor": "المحرر",
+    "navPlacement": "التموضع",
+    "navSave": "حفظ",
+    "cardDocTitle": "مستند PDF",
+    "cardSigTitle": "التوقيع",
+    "cardStampTitle": "الختم",
+    "cardExportTitle": "تنزيل PDF",
+    "uploadPdfTitle": "اختر PDF",
+    "uploadPdfSub": "اضغط أو أفلت الملف",
+    "btnPlaceSignatures": "وضع التوقيعات",
+    "uploadImgTitle": "PNG بخلفية شفافة",
+    "uploadImgSub": "أو عالج صورة أدناه",
+    "btnProcessUpload": "✨ رفع صورة وإزالة الخلفية",
+    "btnProcessReplace": "✨ استبدال / تعديل",
+    "labelWidthMm": "العرض (مم)",
+    "labelHeightMm": "الارتفاع (مم)",
+    "labelSizeMm": "الحجم (مم)",
+    "modeSig": "✍️ التوقيع",
+    "modeStamp": "🔵 الختم",
+    "modeBoth": "✍️+🔵 كلاهما",
+    "applyAll": "كل الصفحات",
+    "emptyPlacementTitle": "لا يوجد تموضع",
+    "emptyPlacementText": "افتح مستندًا واضغط على الصفحة لوضع توقيع أو ختم",
+    "btnClearAll": "🗑 مسح الكل",
+    "exportDescHtml": "سيتم دمج جميع الطبقات.<br>ستصبح التوقيعات والأختام جزءًا من المستند.",
+    "emptyExportTitle": "غير جاهز",
+    "emptyExportText": "ارفع ملف PDF أو توقيعًا أو ختمًا، ثم ضعها على الصفحات",
+    "modalBgTitle": "✨ إزالة خلفية الصورة",
+    "modalBgSub": "ارفع صورة للتوقيع أو الختم — سيزيل التطبيق الخلفية ويحفظ صورة PNG",
+    "tabAuto": "🪄 تلقائي",
+    "tabLight": "☀️ خلفية فاتحة",
+    "tabDark": "🌑 خلفية داكنة",
+    "sliderThreshold": "حد الإزالة",
+    "sliderThresholdHint": "أقل — الخلفية فقط. أكثر — يلتقط بكسلات أكثر.",
+    "sliderFeather": "تنعيم الحواف",
+    "btnChoosePhoto": "📁 اختر صورة",
+    "btnCancel": "إلغاء",
+    "btnUse": "✅ استخدام",
+    "langPickerTitle": "اللغة",
+    "langPickerSub": "اختر لغة الواجهة",
+    "installTitle": "تثبيت التطبيق",
+    "exportTitle": "تنزيل PDF",
+    "tagline": "توقيع وختم على PDF",
+    "noFileChosen": "لم يتم اختيار ملف",
+    "toastLoadingDoc": "جارٍ تحميل المستند…",
+    "toastPdfError": "خطأ في تحميل PDF: ",
+    "toastDocLoaded": "تم تحميل المستند",
+    "savedSuffix": "✓ تم الحفظ",
+    "toastUploadedSaved": "تم الرفع والحفظ",
+    "savedWord": "محفوظ",
+    "toastNeedSig": "ارفع توقيعًا أولاً",
+    "toastNeedStamp": "ارفع ختمًا أولاً",
+    "toastAddedPages": "أُضيف إلى {n} صفحة",
+    "pagePrefix": "صفحة",
+    "unitMm": "مم",
+    "exportSigCount": "التوقيعات:",
+    "exportStampCount": "الأختام:",
+    "exportPageCount": "عدد الصفحات في المستند:",
+    "exportProgress": "صفحة {n}/{total}…",
+    "downloadFilePrefix": "موقع_",
+    "toastPdfSaved": "تم حفظ PDF — تم دمج الطبقات!",
+    "toastError": "خطأ: ",
+    "btnDownloadPdf": "⬇️ تنزيل PDF",
+    "processedDefaultName": "معالج",
+    "toastBgRemoved": "تمت إزالة الخلفية! تم حفظ الصورة.",
+    "origLabel": "الأصلية",
+    "resultLabel": "النتيجة",
+    "toastLoadedFromMemory": "تم تحميل التوقيع والختم من الذاكرة",
+    "orDivider": "أو",
+    "btnTakePhoto": "📷 الكاميرا",
+    "btnGallery": "🖼 المعرض",
+    "docPhotosHint": "الصفحات الممسوحة:",
+    "btnAddPage": "➕ إضافة صفحة",
+    "btnDocPhotosDone": "✅ تم — إنشاء PDF",
+    "scannedDocName": "مستند ممسوح ضوئيًا"
+  },
+  "zh": {
+    "navDoc": "文档",
+    "navEditor": "编辑器",
+    "navPlacement": "放置",
+    "navSave": "保存",
+    "cardDocTitle": "PDF 文档",
+    "cardSigTitle": "签名",
+    "cardStampTitle": "印章",
+    "cardExportTitle": "下载 PDF",
+    "uploadPdfTitle": "选择 PDF",
+    "uploadPdfSub": "点击或拖放文件",
+    "btnPlaceSignatures": "放置签名和印章",
+    "uploadImgTitle": "透明背景 PNG",
+    "uploadImgSub": "或在下方处理照片",
+    "btnProcessUpload": "✨ 上传照片并去除背景",
+    "btnProcessReplace": "✨ 替换 / 处理",
+    "labelWidthMm": "宽度（毫米）",
+    "labelHeightMm": "高度（毫米）",
+    "labelSizeMm": "尺寸（毫米）",
+    "modeSig": "✍️ 签名",
+    "modeStamp": "🔵 印章",
+    "modeBoth": "✍️+🔵 两者",
+    "applyAll": "所有页面",
+    "emptyPlacementTitle": "尚无放置",
+    "emptyPlacementText": "打开文档并点击页面以放置签名或印章",
+    "btnClearAll": "🗑 全部清除",
+    "exportDescHtml": "所有图层将被合并。<br>签名和印章将成为文档的一部分。",
+    "emptyExportTitle": "尚未就绪",
+    "emptyExportText": "上传 PDF、签名或印章，然后将其放置在页面上",
+    "modalBgTitle": "✨ 去除照片背景",
+    "modalBgSub": "上传签名或印章的照片——应用会去除背景并保存为 PNG",
+    "tabAuto": "🪄 自动",
+    "tabLight": "☀️ 浅色背景",
+    "tabDark": "🌑 深色背景",
+    "sliderThreshold": "去除阈值",
+    "sliderThresholdHint": "数值越小仅去除背景，越大则会覆盖更多像素。",
+    "sliderFeather": "边缘柔化",
+    "btnChoosePhoto": "📁 选择照片",
+    "btnCancel": "取消",
+    "btnUse": "✅ 使用",
+    "langPickerTitle": "语言",
+    "langPickerSub": "选择界面语言",
+    "installTitle": "安装应用",
+    "exportTitle": "下载 PDF",
+    "tagline": "在 PDF 上签名盖章",
+    "noFileChosen": "未选择文件",
+    "toastLoadingDoc": "正在加载文档…",
+    "toastPdfError": "加载 PDF 出错：",
+    "toastDocLoaded": "文档已加载",
+    "savedSuffix": "✓ 已保存",
+    "toastUploadedSaved": "已上传并保存",
+    "savedWord": "已保存",
+    "toastNeedSig": "请先上传签名",
+    "toastNeedStamp": "请先上传印章",
+    "toastAddedPages": "已添加到 {n} 页",
+    "pagePrefix": "第",
+    "unitMm": "毫米",
+    "exportSigCount": "签名数：",
+    "exportStampCount": "印章数：",
+    "exportPageCount": "文档页数：",
+    "exportProgress": "第 {n}/{total} 页…",
+    "downloadFilePrefix": "已签署_",
+    "toastPdfSaved": "PDF 已保存——图层已合并！",
+    "toastError": "错误：",
+    "btnDownloadPdf": "⬇️ 下载 PDF",
+    "processedDefaultName": "已处理",
+    "toastBgRemoved": "背景已去除！图片已保存。",
+    "origLabel": "原图",
+    "resultLabel": "结果",
+    "toastLoadedFromMemory": "已从本地存储加载签名和印章",
+    "orDivider": "或",
+    "btnTakePhoto": "📷 拍照",
+    "btnGallery": "🖼 相册",
+    "docPhotosHint": "已扫描页数：",
+    "btnAddPage": "➕ 添加页面",
+    "btnDocPhotosDone": "✅ 完成 — 生成PDF",
+    "scannedDocName": "扫描文档"
+  },
+  "ja": {
+    "navDoc": "書類",
+    "navEditor": "エディタ",
+    "navPlacement": "配置",
+    "navSave": "保存",
+    "cardDocTitle": "PDF書類",
+    "cardSigTitle": "署名",
+    "cardStampTitle": "印鑑",
+    "cardExportTitle": "PDFをダウンロード",
+    "uploadPdfTitle": "PDFを選択",
+    "uploadPdfSub": "タップまたはドロップ",
+    "btnPlaceSignatures": "署名を配置",
+    "uploadImgTitle": "透明背景のPNG",
+    "uploadImgSub": "または下の写真を加工",
+    "btnProcessUpload": "✨ 写真をアップロードして背景を除去",
+    "btnProcessReplace": "✨ 置き換え／編集",
+    "labelWidthMm": "幅（mm）",
+    "labelHeightMm": "高さ（mm）",
+    "labelSizeMm": "サイズ（mm）",
+    "modeSig": "✍️ 署名",
+    "modeStamp": "🔵 印鑑",
+    "modeBoth": "✍️+🔵 両方",
+    "applyAll": "全ページ",
+    "emptyPlacementTitle": "配置なし",
+    "emptyPlacementText": "書類を開き、ページをタップして署名や印鑑を配置してください",
+    "btnClearAll": "🗑 すべて消去",
+    "exportDescHtml": "すべてのレイヤーが統合されます。<br>署名と印鑑は書類の一部になります。",
+    "emptyExportTitle": "準備未完了",
+    "emptyExportText": "PDF・署名・印鑑をアップロードしてページに配置してください",
+    "modalBgTitle": "✨ 写真の背景を除去",
+    "modalBgSub": "署名や印鑑の写真をアップロードすると、背景を除去してPNGとして保存します",
+    "tabAuto": "🪄 自動",
+    "tabLight": "☀️ 明るい背景",
+    "tabDark": "🌑 暗い背景",
+    "sliderThreshold": "除去しきい値",
+    "sliderThresholdHint": "小さいほど背景のみ、大きいほど多くのピクセルを含みます。",
+    "sliderFeather": "エッジのぼかし",
+    "btnChoosePhoto": "📁 写真を選択",
+    "btnCancel": "キャンセル",
+    "btnUse": "✅ 使用する",
+    "langPickerTitle": "言語",
+    "langPickerSub": "インターフェース言語を選択",
+    "installTitle": "アプリをインストール",
+    "exportTitle": "PDFをダウンロード",
+    "tagline": "PDFに署名と印鑑",
+    "noFileChosen": "ファイル未選択",
+    "toastLoadingDoc": "書類を読み込み中…",
+    "toastPdfError": "PDFの読み込みエラー：",
+    "toastDocLoaded": "書類を読み込みました",
+    "savedSuffix": "✓ 保存済み",
+    "toastUploadedSaved": "アップロードして保存しました",
+    "savedWord": "保存済み",
+    "toastNeedSig": "先に署名をアップロードしてください",
+    "toastNeedStamp": "先に印鑑をアップロードしてください",
+    "toastAddedPages": "{n}ページに追加しました",
+    "pagePrefix": "ページ",
+    "unitMm": "mm",
+    "exportSigCount": "署名：",
+    "exportStampCount": "印鑑：",
+    "exportPageCount": "書類のページ数：",
+    "exportProgress": "{n}/{total}ページ…",
+    "downloadFilePrefix": "署名済み_",
+    "toastPdfSaved": "PDFを保存しました。レイヤーを統合済み！",
+    "toastError": "エラー：",
+    "btnDownloadPdf": "⬇️ PDFをダウンロード",
+    "processedDefaultName": "処理済み",
+    "toastBgRemoved": "背景を除去しました！画像を保存しました。",
+    "origLabel": "オリジナル",
+    "resultLabel": "結果",
+    "toastLoadedFromMemory": "署名と印鑑をメモリから読み込みました",
+    "orDivider": "または",
+    "btnTakePhoto": "📷 カメラ",
+    "btnGallery": "🖼 ギャラリー",
+    "docPhotosHint": "スキャン済みページ数：",
+    "btnAddPage": "➕ ページを追加",
+    "btnDocPhotosDone": "✅ 完了 — PDFを作成",
+    "scannedDocName": "スキャンした書類"
+  },
+  "ko": {
+    "navDoc": "문서",
+    "navEditor": "편집기",
+    "navPlacement": "배치",
+    "navSave": "저장",
+    "cardDocTitle": "PDF 문서",
+    "cardSigTitle": "서명",
+    "cardStampTitle": "도장",
+    "cardExportTitle": "PDF 다운로드",
+    "uploadPdfTitle": "PDF 선택",
+    "uploadPdfSub": "탭하거나 파일을 놓으세요",
+    "btnPlaceSignatures": "서명 배치하기",
+    "uploadImgTitle": "투명 배경 PNG",
+    "uploadImgSub": "또는 아래에서 사진 처리",
+    "btnProcessUpload": "✨ 사진 업로드 및 배경 제거",
+    "btnProcessReplace": "✨ 교체 / 편집",
+    "labelWidthMm": "너비(mm)",
+    "labelHeightMm": "높이(mm)",
+    "labelSizeMm": "크기(mm)",
+    "modeSig": "✍️ 서명",
+    "modeStamp": "🔵 도장",
+    "modeBoth": "✍️+🔵 둘 다",
+    "applyAll": "모든 페이지",
+    "emptyPlacementTitle": "배치 없음",
+    "emptyPlacementText": "문서를 열고 페이지를 탭하여 서명 또는 도장을 배치하세요",
+    "btnClearAll": "🗑 모두 지우기",
+    "exportDescHtml": "모든 레이어가 병합됩니다.<br>서명과 도장이 문서의 일부가 됩니다.",
+    "emptyExportTitle": "준비되지 않음",
+    "emptyExportText": "PDF, 서명 또는 도장을 업로드한 후 페이지에 배치하세요",
+    "modalBgTitle": "✨ 사진 배경 제거",
+    "modalBgSub": "서명 또는 도장 사진을 업로드하면 앱이 배경을 제거하고 PNG로 저장합니다",
+    "tabAuto": "🪄 자동",
+    "tabLight": "☀️ 밝은 배경",
+    "tabDark": "🌑 어두운 배경",
+    "sliderThreshold": "제거 임계값",
+    "sliderThresholdHint": "낮을수록 배경만, 높을수록 더 많은 픽셀을 포함합니다.",
+    "sliderFeather": "가장자리 부드럽게",
+    "btnChoosePhoto": "📁 사진 선택",
+    "btnCancel": "취소",
+    "btnUse": "✅ 사용",
+    "langPickerTitle": "언어",
+    "langPickerSub": "인터페이스 언어를 선택하세요",
+    "installTitle": "앱 설치",
+    "exportTitle": "PDF 다운로드",
+    "tagline": "PDF에 서명 및 도장",
+    "noFileChosen": "파일이 선택되지 않음",
+    "toastLoadingDoc": "문서 불러오는 중…",
+    "toastPdfError": "PDF 로드 오류: ",
+    "toastDocLoaded": "문서를 불러왔습니다",
+    "savedSuffix": "✓ 저장됨",
+    "toastUploadedSaved": "업로드 후 저장됨",
+    "savedWord": "저장됨",
+    "toastNeedSig": "먼저 서명을 업로드하세요",
+    "toastNeedStamp": "먼저 도장을 업로드하세요",
+    "toastAddedPages": "{n}페이지에 추가됨",
+    "pagePrefix": "페이지",
+    "unitMm": "mm",
+    "exportSigCount": "서명:",
+    "exportStampCount": "도장:",
+    "exportPageCount": "문서 페이지 수:",
+    "exportProgress": "{n}/{total} 페이지…",
+    "downloadFilePrefix": "서명됨_",
+    "toastPdfSaved": "PDF 저장됨 — 레이어 병합 완료!",
+    "toastError": "오류: ",
+    "btnDownloadPdf": "⬇️ PDF 다운로드",
+    "processedDefaultName": "처리됨",
+    "toastBgRemoved": "배경이 제거되었습니다! 이미지가 저장되었습니다.",
+    "origLabel": "원본",
+    "resultLabel": "결과",
+    "toastLoadedFromMemory": "서명과 도장을 메모리에서 불러왔습니다",
+    "orDivider": "또는",
+    "btnTakePhoto": "📷 카메라",
+    "btnGallery": "🖼 갤러리",
+    "docPhotosHint": "스캔된 페이지:",
+    "btnAddPage": "➕ 페이지 추가",
+    "btnDocPhotosDone": "✅ 완료 — PDF 생성",
+    "scannedDocName": "스캔한 문서"
+  },
+  "hi": {
+    "navDoc": "दस्तावेज़",
+    "navEditor": "संपादक",
+    "navPlacement": "स्थान",
+    "navSave": "सहेजें",
+    "cardDocTitle": "PDF दस्तावेज़",
+    "cardSigTitle": "हस्ताक्षर",
+    "cardStampTitle": "मुहर",
+    "cardExportTitle": "PDF डाउनलोड करें",
+    "uploadPdfTitle": "PDF चुनें",
+    "uploadPdfSub": "टैप करें या फ़ाइल छोड़ें",
+    "btnPlaceSignatures": "हस्ताक्षर रखें",
+    "uploadImgTitle": "पारदर्शी पृष्ठभूमि वाला PNG",
+    "uploadImgSub": "या नीचे फोटो प्रोसेस करें",
+    "btnProcessUpload": "✨ फोटो अपलोड करें और बैकग्राउंड हटाएं",
+    "btnProcessReplace": "✨ बदलें / संपादित करें",
+    "labelWidthMm": "चौड़ाई (मिमी)",
+    "labelHeightMm": "ऊंचाई (मिमी)",
+    "labelSizeMm": "आकार (मिमी)",
+    "modeSig": "✍️ हस्ताक्षर",
+    "modeStamp": "🔵 मुहर",
+    "modeBoth": "✍️+🔵 दोनों",
+    "applyAll": "सभी पृष्ठ",
+    "emptyPlacementTitle": "कोई स्थान नहीं",
+    "emptyPlacementText": "दस्तावेज़ खोलें और हस्ताक्षर या मुहर लगाने के लिए पृष्ठ पर टैप करें",
+    "btnClearAll": "🗑 सभी हटाएं",
+    "exportDescHtml": "सभी परतें मर्ज कर दी जाएंगी।<br>हस्ताक्षर और मुहर दस्तावेज़ का हिस्सा बन जाएंगे।",
+    "emptyExportTitle": "तैयार नहीं",
+    "emptyExportText": "PDF, हस्ताक्षर या मुहर अपलोड करें, फिर उन्हें पृष्ठों पर रखें",
+    "modalBgTitle": "✨ फोटो से बैकग्राउंड हटाएं",
+    "modalBgSub": "हस्ताक्षर या मुहर की फोटो अपलोड करें — ऐप बैकग्राउंड हटाकर PNG सहेजेगा",
+    "tabAuto": "🪄 ऑटो",
+    "tabLight": "☀️ हल्की पृष्ठभूमि",
+    "tabDark": "🌑 गहरी पृष्ठभूमि",
+    "sliderThreshold": "निष्कासन सीमा",
+    "sliderThresholdHint": "कम — केवल पृष्ठभूमि। अधिक — अधिक पिक्सेल शामिल करता है।",
+    "sliderFeather": "किनारे नरम करें",
+    "btnChoosePhoto": "📁 फोटो चुनें",
+    "btnCancel": "रद्द करें",
+    "btnUse": "✅ उपयोग करें",
+    "langPickerTitle": "भाषा",
+    "langPickerSub": "इंटरफ़ेस भाषा चुनें",
+    "installTitle": "ऐप इंस्टॉल करें",
+    "exportTitle": "PDF डाउनलोड करें",
+    "tagline": "PDF पर हस्ताक्षर और मुहर",
+    "noFileChosen": "कोई फ़ाइल चयनित नहीं",
+    "toastLoadingDoc": "दस्तावेज़ लोड हो रहा है…",
+    "toastPdfError": "PDF लोड करने में त्रुटि: ",
+    "toastDocLoaded": "दस्तावेज़ लोड हो गया",
+    "savedSuffix": "✓ सहेजा गया",
+    "toastUploadedSaved": "अपलोड और सहेजा गया",
+    "savedWord": "सहेजा गया",
+    "toastNeedSig": "पहले हस्ताक्षर अपलोड करें",
+    "toastNeedStamp": "पहले मुहर अपलोड करें",
+    "toastAddedPages": "{n} पृष्ठों में जोड़ा गया",
+    "pagePrefix": "पृष्ठ",
+    "unitMm": "मिमी",
+    "exportSigCount": "हस्ताक्षर:",
+    "exportStampCount": "मुहरें:",
+    "exportPageCount": "दस्तावेज़ में पृष्ठ:",
+    "exportProgress": "पृष्ठ {n}/{total}…",
+    "downloadFilePrefix": "hastakshar_",
+    "toastPdfSaved": "PDF सहेजा गया — परतें मर्ज हो गईं!",
+    "toastError": "त्रुटि: ",
+    "btnDownloadPdf": "⬇️ PDF डाउनलोड करें",
+    "processedDefaultName": "संसाधित",
+    "toastBgRemoved": "बैकग्राउंड हटाया गया! छवि सहेजी गई।",
+    "origLabel": "मूल",
+    "resultLabel": "परिणाम",
+    "toastLoadedFromMemory": "हस्ताक्षर और मुहर मेमोरी से लोड हुए",
+    "orDivider": "या",
+    "btnTakePhoto": "📷 कैमरा",
+    "btnGallery": "🖼 गैलरी",
+    "docPhotosHint": "स्कैन किए गए पृष्ठ:",
+    "btnAddPage": "➕ पृष्ठ जोड़ें",
+    "btnDocPhotosDone": "✅ पूर्ण — PDF बनाएं",
+    "scannedDocName": "स्कैन किया गया दस्तावेज़"
+  },
+  "nl": {
+    "navDoc": "Document",
+    "navEditor": "Editor",
+    "navPlacement": "Plaatsing",
+    "navSave": "Opslaan",
+    "cardDocTitle": "PDF-document",
+    "cardSigTitle": "Handtekening",
+    "cardStampTitle": "Stempel",
+    "cardExportTitle": "PDF downloaden",
+    "uploadPdfTitle": "Kies PDF",
+    "uploadPdfSub": "Tik of sleep een bestand",
+    "btnPlaceSignatures": "Handtekeningen plaatsen",
+    "uploadImgTitle": "PNG met transparante achtergrond",
+    "uploadImgSub": "of verwerk een foto hieronder",
+    "btnProcessUpload": "✨ Foto uploaden en achtergrond verwijderen",
+    "btnProcessReplace": "✨ Vervangen / bewerken",
+    "labelWidthMm": "Breedte (mm)",
+    "labelHeightMm": "Hoogte (mm)",
+    "labelSizeMm": "Grootte (mm)",
+    "modeSig": "✍️ Handtekening",
+    "modeStamp": "🔵 Stempel",
+    "modeBoth": "✍️+🔵 Beide",
+    "applyAll": "Alle pagina's",
+    "emptyPlacementTitle": "Nog geen plaatsingen",
+    "emptyPlacementText": "Open een document en tik op de pagina om een handtekening of stempel te plaatsen",
+    "btnClearAll": "🗑 Alles wissen",
+    "exportDescHtml": "Alle lagen worden samengevoegd.<br>Handtekeningen en stempels worden deel van het document.",
+    "emptyExportTitle": "Nog niet klaar",
+    "emptyExportText": "Upload een PDF, handtekening of stempel en plaats ze op de pagina's",
+    "modalBgTitle": "✨ Achtergrond van foto verwijderen",
+    "modalBgSub": "Upload een foto van de handtekening of stempel — de app verwijdert de achtergrond en slaat een PNG op",
+    "tabAuto": "🪄 Automatisch",
+    "tabLight": "☀️ Lichte achtergrond",
+    "tabDark": "🌑 Donkere achtergrond",
+    "sliderThreshold": "Verwijderingsdrempel",
+    "sliderThresholdHint": "Lager — alleen de achtergrond. Hoger — vangt meer pixels.",
+    "sliderFeather": "Randvervaging",
+    "btnChoosePhoto": "📁 Foto kiezen",
+    "btnCancel": "Annuleren",
+    "btnUse": "✅ Gebruiken",
+    "langPickerTitle": "Taal",
+    "langPickerSub": "Kies de interfacetaal",
+    "installTitle": "App installeren",
+    "exportTitle": "PDF downloaden",
+    "tagline": "Handtekening en stempel op PDF",
+    "noFileChosen": "geen bestand gekozen",
+    "toastLoadingDoc": "Document laden…",
+    "toastPdfError": "Fout bij laden PDF: ",
+    "toastDocLoaded": "Document geladen",
+    "savedSuffix": "✓ opgeslagen",
+    "toastUploadedSaved": "Geüpload en opgeslagen",
+    "savedWord": "opgeslagen",
+    "toastNeedSig": "Upload eerst een handtekening",
+    "toastNeedStamp": "Upload eerst een stempel",
+    "toastAddedPages": "Toegevoegd aan {n} pagina's",
+    "pagePrefix": "Pag.",
+    "unitMm": "mm",
+    "exportSigCount": "Handtekeningen:",
+    "exportStampCount": "Stempels:",
+    "exportPageCount": "Pagina's in document:",
+    "exportProgress": "Pagina {n}/{total}…",
+    "downloadFilePrefix": "ondertekend_",
+    "toastPdfSaved": "PDF opgeslagen — lagen samengevoegd!",
+    "toastError": "Fout: ",
+    "btnDownloadPdf": "⬇️ PDF downloaden",
+    "processedDefaultName": "verwerkt",
+    "toastBgRemoved": "Achtergrond verwijderd! Afbeelding opgeslagen.",
+    "origLabel": "Origineel",
+    "resultLabel": "Resultaat",
+    "toastLoadedFromMemory": "Handtekening en stempel geladen uit geheugen",
+    "orDivider": "of",
+    "btnTakePhoto": "📷 Camera",
+    "btnGallery": "🖼 Galerij",
+    "docPhotosHint": "Gescande pagina's:",
+    "btnAddPage": "➕ Pagina toevoegen",
+    "btnDocPhotosDone": "✅ Klaar — PDF maken",
+    "scannedDocName": "Gescand document"
+  },
+  "sv": {
+    "navDoc": "Dokument",
+    "navEditor": "Redigerare",
+    "navPlacement": "Placering",
+    "navSave": "Spara",
+    "cardDocTitle": "PDF-dokument",
+    "cardSigTitle": "Signatur",
+    "cardStampTitle": "Stämpel",
+    "cardExportTitle": "Ladda ner PDF",
+    "uploadPdfTitle": "Välj PDF",
+    "uploadPdfSub": "Tryck eller släpp en fil",
+    "btnPlaceSignatures": "Placera signaturer",
+    "uploadImgTitle": "PNG med transparent bakgrund",
+    "uploadImgSub": "eller bearbeta ett foto nedan",
+    "btnProcessUpload": "✨ Ladda upp foto och ta bort bakgrund",
+    "btnProcessReplace": "✨ Ersätt / redigera",
+    "labelWidthMm": "Bredd (mm)",
+    "labelHeightMm": "Höjd (mm)",
+    "labelSizeMm": "Storlek (mm)",
+    "modeSig": "✍️ Signatur",
+    "modeStamp": "🔵 Stämpel",
+    "modeBoth": "✍️+🔵 Båda",
+    "applyAll": "Alla sidor",
+    "emptyPlacementTitle": "Inga placeringar",
+    "emptyPlacementText": "Öppna ett dokument och tryck på sidan för att placera en signatur eller stämpel",
+    "btnClearAll": "🗑 Rensa allt",
+    "exportDescHtml": "Alla lager kommer att slås samman.<br>Signaturer och stämplar blir en del av dokumentet.",
+    "emptyExportTitle": "Inte klart",
+    "emptyExportText": "Ladda upp en PDF, signatur eller stämpel och placera dem sedan på sidorna",
+    "modalBgTitle": "✨ Ta bort bakgrund från foto",
+    "modalBgSub": "Ladda upp ett foto på signaturen eller stämpeln — appen tar bort bakgrunden och sparar en PNG",
+    "tabAuto": "🪄 Auto",
+    "tabLight": "☀️ Ljus bakgrund",
+    "tabDark": "🌑 Mörk bakgrund",
+    "sliderThreshold": "Borttagningströskel",
+    "sliderThresholdHint": "Lägre — endast bakgrunden. Högre — fångar fler pixlar.",
+    "sliderFeather": "Kantutjämning",
+    "btnChoosePhoto": "📁 Välj foto",
+    "btnCancel": "Avbryt",
+    "btnUse": "✅ Använd",
+    "langPickerTitle": "Språk",
+    "langPickerSub": "Välj gränssnittsspråk",
+    "installTitle": "Installera app",
+    "exportTitle": "Ladda ner PDF",
+    "tagline": "Signatur och stämpel på PDF",
+    "noFileChosen": "ingen fil vald",
+    "toastLoadingDoc": "Laddar dokument…",
+    "toastPdfError": "Fel vid laddning av PDF: ",
+    "toastDocLoaded": "Dokument laddat",
+    "savedSuffix": "✓ sparat",
+    "toastUploadedSaved": "Uppladdat och sparat",
+    "savedWord": "sparat",
+    "toastNeedSig": "Ladda upp en signatur först",
+    "toastNeedStamp": "Ladda upp en stämpel först",
+    "toastAddedPages": "Tillagt på {n} sidor",
+    "pagePrefix": "Sida",
+    "unitMm": "mm",
+    "exportSigCount": "Signaturer:",
+    "exportStampCount": "Stämplar:",
+    "exportPageCount": "Sidor i dokumentet:",
+    "exportProgress": "Sida {n}/{total}…",
+    "downloadFilePrefix": "signerad_",
+    "toastPdfSaved": "PDF sparad — lager sammanslagna!",
+    "toastError": "Fel: ",
+    "btnDownloadPdf": "⬇️ Ladda ner PDF",
+    "processedDefaultName": "bearbetad",
+    "toastBgRemoved": "Bakgrund borttagen! Bilden sparad.",
+    "origLabel": "Original",
+    "resultLabel": "Resultat",
+    "toastLoadedFromMemory": "Signatur och stämpel laddade från minnet",
+    "orDivider": "eller",
+    "btnTakePhoto": "📷 Kamera",
+    "btnGallery": "🖼 Galleri",
+    "docPhotosHint": "Skannade sidor:",
+    "btnAddPage": "➕ Lägg till sida",
+    "btnDocPhotosDone": "✅ Klar — skapa PDF",
+    "scannedDocName": "Skannat dokument"
+  },
+  "cs": {
+    "navDoc": "Dokument",
+    "navEditor": "Editor",
+    "navPlacement": "Umístění",
+    "navSave": "Uložit",
+    "cardDocTitle": "PDF dokument",
+    "cardSigTitle": "Podpis",
+    "cardStampTitle": "Razítko",
+    "cardExportTitle": "Stáhnout PDF",
+    "uploadPdfTitle": "Vybrat PDF",
+    "uploadPdfSub": "Klepněte nebo přetáhněte soubor",
+    "btnPlaceSignatures": "Umístit podpisy",
+    "uploadImgTitle": "PNG s průhledným pozadím",
+    "uploadImgSub": "nebo zpracujte fotografii níže",
+    "btnProcessUpload": "✨ Nahrát fotku a odstranit pozadí",
+    "btnProcessReplace": "✨ Nahradit / upravit",
+    "labelWidthMm": "Šířka (mm)",
+    "labelHeightMm": "Výška (mm)",
+    "labelSizeMm": "Velikost (mm)",
+    "modeSig": "✍️ Podpis",
+    "modeStamp": "🔵 Razítko",
+    "modeBoth": "✍️+🔵 Obojí",
+    "applyAll": "Všechny str.",
+    "emptyPlacementTitle": "Žádné umístění",
+    "emptyPlacementText": "Otevřete dokument a klepněte na stránku pro umístění podpisu nebo razítka",
+    "btnClearAll": "🗑 Vymazat vše",
+    "exportDescHtml": "Všechny vrstvy budou sloučeny.<br>Podpisy a razítka se stanou součástí dokumentu.",
+    "emptyExportTitle": "Není připraveno",
+    "emptyExportText": "Nahrajte PDF, podpis nebo razítko a poté je umístěte na stránky",
+    "modalBgTitle": "✨ Odstranit pozadí z fotky",
+    "modalBgSub": "Nahrajte fotku podpisu nebo razítka — aplikace odstraní pozadí a uloží PNG",
+    "tabAuto": "🪄 Automaticky",
+    "tabLight": "☀️ Světlé pozadí",
+    "tabDark": "🌑 Tmavé pozadí",
+    "sliderThreshold": "Práh odstranění",
+    "sliderThresholdHint": "Nižší — pouze pozadí. Vyšší — zachytí více pixelů.",
+    "sliderFeather": "Vyhlazení hran",
+    "btnChoosePhoto": "📁 Vybrat fotku",
+    "btnCancel": "Zrušit",
+    "btnUse": "✅ Použít",
+    "langPickerTitle": "Jazyk",
+    "langPickerSub": "Vyberte jazyk rozhraní",
+    "installTitle": "Nainstalovat aplikaci",
+    "exportTitle": "Stáhnout PDF",
+    "tagline": "Podpis a razítko na PDF",
+    "noFileChosen": "soubor nevybrán",
+    "toastLoadingDoc": "Načítání dokumentu…",
+    "toastPdfError": "Chyba při načítání PDF: ",
+    "toastDocLoaded": "Dokument načten",
+    "savedSuffix": "✓ uloženo",
+    "toastUploadedSaved": "Nahráno a uloženo",
+    "savedWord": "uloženo",
+    "toastNeedSig": "Nejprve nahrajte podpis",
+    "toastNeedStamp": "Nejprve nahrajte razítko",
+    "toastAddedPages": "Přidáno na {n} stránek",
+    "pagePrefix": "Str.",
+    "unitMm": "mm",
+    "exportSigCount": "Podpisy:",
+    "exportStampCount": "Razítka:",
+    "exportPageCount": "Stránek v dokumentu:",
+    "exportProgress": "Stránka {n}/{total}…",
+    "downloadFilePrefix": "podepsano_",
+    "toastPdfSaved": "PDF uloženo — vrstvy sloučeny!",
+    "toastError": "Chyba: ",
+    "btnDownloadPdf": "⬇️ Stáhnout PDF",
+    "processedDefaultName": "zpracováno",
+    "toastBgRemoved": "Pozadí odstraněno! Obrázek uložen.",
+    "origLabel": "Originál",
+    "resultLabel": "Výsledek",
+    "toastLoadedFromMemory": "Podpis a razítko načteny z paměti",
+    "orDivider": "nebo",
+    "btnTakePhoto": "📷 Fotoaparát",
+    "btnGallery": "🖼 Galerie",
+    "docPhotosHint": "Naskenované strany:",
+    "btnAddPage": "➕ Přidat stránku",
+    "btnDocPhotosDone": "✅ Hotovo — vytvořit PDF",
+    "scannedDocName": "Naskenovaný dokument"
+  },
+  "el": {
+    "navDoc": "Έγγραφο",
+    "navEditor": "Επεξεργαστής",
+    "navPlacement": "Τοποθέτηση",
+    "navSave": "Αποθήκευση",
+    "cardDocTitle": "Έγγραφο PDF",
+    "cardSigTitle": "Υπογραφή",
+    "cardStampTitle": "Σφραγίδα",
+    "cardExportTitle": "Λήψη PDF",
+    "uploadPdfTitle": "Επιλογή PDF",
+    "uploadPdfSub": "Πατήστε ή ρίξτε ένα αρχείο",
+    "btnPlaceSignatures": "Τοποθέτηση υπογραφών",
+    "uploadImgTitle": "PNG με διαφανές φόντο",
+    "uploadImgSub": "ή επεξεργαστείτε μια φωτογραφία παρακάτω",
+    "btnProcessUpload": "✨ Μεταφόρτωση φωτογραφίας και αφαίρεση φόντου",
+    "btnProcessReplace": "✨ Αντικατάσταση / επεξεργασία",
+    "labelWidthMm": "Πλάτος (mm)",
+    "labelHeightMm": "Ύψος (mm)",
+    "labelSizeMm": "Μέγεθος (mm)",
+    "modeSig": "✍️ Υπογραφή",
+    "modeStamp": "🔵 Σφραγίδα",
+    "modeBoth": "✍️+🔵 Και τα δύο",
+    "applyAll": "Όλες οι σελίδες",
+    "emptyPlacementTitle": "Καμία τοποθέτηση",
+    "emptyPlacementText": "Ανοίξτε ένα έγγραφο και πατήστε στη σελίδα για να τοποθετήσετε υπογραφή ή σφραγίδα",
+    "btnClearAll": "🗑 Εκκαθάριση όλων",
+    "exportDescHtml": "Όλα τα επίπεδα θα συγχωνευτούν.<br>Οι υπογραφές και οι σφραγίδες θα γίνουν μέρος του εγγράφου.",
+    "emptyExportTitle": "Δεν είναι έτοιμο",
+    "emptyExportText": "Ανεβάστε ένα PDF, υπογραφή ή σφραγίδα και μετά τοποθετήστε τα στις σελίδες",
+    "modalBgTitle": "✨ Αφαίρεση φόντου φωτογραφίας",
+    "modalBgSub": "Ανεβάστε φωτογραφία της υπογραφής ή της σφραγίδας — η εφαρμογή θα αφαιρέσει το φόντο και θα αποθηκεύσει PNG",
+    "tabAuto": "🪄 Αυτόματο",
+    "tabLight": "☀️ Ανοιχτό φόντο",
+    "tabDark": "🌑 Σκούρο φόντο",
+    "sliderThreshold": "Όριο αφαίρεσης",
+    "sliderThresholdHint": "Χαμηλότερο — μόνο το φόντο. Υψηλότερο — καταγράφει περισσότερα pixel.",
+    "sliderFeather": "Απαλότητα άκρων",
+    "btnChoosePhoto": "📁 Επιλογή φωτογραφίας",
+    "btnCancel": "Ακύρωση",
+    "btnUse": "✅ Χρήση",
+    "langPickerTitle": "Γλώσσα",
+    "langPickerSub": "Επιλέξτε τη γλώσσα διεπαφής",
+    "installTitle": "Εγκατάσταση εφαρμογής",
+    "exportTitle": "Λήψη PDF",
+    "tagline": "Υπογραφή και σφραγίδα σε PDF",
+    "noFileChosen": "δεν επιλέχθηκε αρχείο",
+    "toastLoadingDoc": "Φόρτωση εγγράφου…",
+    "toastPdfError": "Σφάλμα φόρτωσης PDF: ",
+    "toastDocLoaded": "Το έγγραφο φορτώθηκε",
+    "savedSuffix": "✓ αποθηκεύτηκε",
+    "toastUploadedSaved": "Μεταφορτώθηκε και αποθηκεύτηκε",
+    "savedWord": "αποθηκεύτηκε",
+    "toastNeedSig": "Ανεβάστε πρώτα μια υπογραφή",
+    "toastNeedStamp": "Ανεβάστε πρώτα μια σφραγίδα",
+    "toastAddedPages": "Προστέθηκε σε {n} σελίδες",
+    "pagePrefix": "Σελ.",
+    "unitMm": "mm",
+    "exportSigCount": "Υπογραφές:",
+    "exportStampCount": "Σφραγίδες:",
+    "exportPageCount": "Σελίδες στο έγγραφο:",
+    "exportProgress": "Σελίδα {n}/{total}…",
+    "downloadFilePrefix": "ypografi_",
+    "toastPdfSaved": "Το PDF αποθηκεύτηκε — τα επίπεδα συγχωνεύτηκαν!",
+    "toastError": "Σφάλμα: ",
+    "btnDownloadPdf": "⬇️ Λήψη PDF",
+    "processedDefaultName": "επεξεργασμένο",
+    "toastBgRemoved": "Το φόντο αφαιρέθηκε! Η εικόνα αποθηκεύτηκε.",
+    "origLabel": "Πρωτότυπο",
+    "resultLabel": "Αποτέλεσμα",
+    "toastLoadedFromMemory": "Η υπογραφή και η σφραγίδα φορτώθηκαν από τη μνήμη",
+    "orDivider": "ή",
+    "btnTakePhoto": "📷 Κάμερα",
+    "btnGallery": "🖼 Συλλογή",
+    "docPhotosHint": "Σαρωμένες σελίδες:",
+    "btnAddPage": "➕ Προσθήκη σελίδας",
+    "btnDocPhotosDone": "✅ Έτοιμο — δημιουργία PDF",
+    "scannedDocName": "Σαρωμένο έγγραφο"
+  },
+  "he": {
+    "navDoc": "מסמך",
+    "navEditor": "עורך",
+    "navPlacement": "מיקום",
+    "navSave": "שמור",
+    "cardDocTitle": "מסמך PDF",
+    "cardSigTitle": "חתימה",
+    "cardStampTitle": "חותמת",
+    "cardExportTitle": "הורדת PDF",
+    "uploadPdfTitle": "בחר PDF",
+    "uploadPdfSub": "הקש או גרור קובץ",
+    "btnPlaceSignatures": "מיקום חתימות",
+    "uploadImgTitle": "PNG עם רקע שקוף",
+    "uploadImgSub": "או עבד תמונה למטה",
+    "btnProcessUpload": "✨ העלה תמונה והסר רקע",
+    "btnProcessReplace": "✨ החלף / ערוך",
+    "labelWidthMm": "רוחב (מ\"מ)",
+    "labelHeightMm": "גובה (מ\"מ)",
+    "labelSizeMm": "גודל (מ\"מ)",
+    "modeSig": "✍️ חתימה",
+    "modeStamp": "🔵 חותמת",
+    "modeBoth": "✍️+🔵 שניהם",
+    "applyAll": "כל העמודים",
+    "emptyPlacementTitle": "אין מיקומים",
+    "emptyPlacementText": "פתח מסמך והקש על העמוד כדי למקם חתימה או חותמת",
+    "btnClearAll": "🗑 נקה הכל",
+    "exportDescHtml": "כל השכבות ימוזגו.<br>חתימות וחותמות יהפכו לחלק מהמסמך.",
+    "emptyExportTitle": "לא מוכן",
+    "emptyExportText": "העלה PDF, חתימה או חותמת, ולאחר מכן מקם אותם על העמודים",
+    "modalBgTitle": "✨ הסרת רקע מהתמונה",
+    "modalBgSub": "העלה תמונה של החתימה או החותמת — האפליקציה תסיר את הרקע ותשמור PNG",
+    "tabAuto": "🪄 אוטומטי",
+    "tabLight": "☀️ רקע בהיר",
+    "tabDark": "🌑 רקע כהה",
+    "sliderThreshold": "סף הסרה",
+    "sliderThresholdHint": "נמוך יותר — רק הרקע. גבוה יותר — לוכד יותר פיקסלים.",
+    "sliderFeather": "ריכוך קצוות",
+    "btnChoosePhoto": "📁 בחר תמונה",
+    "btnCancel": "ביטול",
+    "btnUse": "✅ השתמש",
+    "langPickerTitle": "שפה",
+    "langPickerSub": "בחר את שפת הממשק",
+    "installTitle": "התקן אפליקציה",
+    "exportTitle": "הורדת PDF",
+    "tagline": "חתימה וחותמת על PDF",
+    "noFileChosen": "לא נבחר קובץ",
+    "toastLoadingDoc": "טוען מסמך…",
+    "toastPdfError": "שגיאה בטעינת PDF: ",
+    "toastDocLoaded": "המסמך נטען",
+    "savedSuffix": "✓ נשמר",
+    "toastUploadedSaved": "הועלה ונשמר",
+    "savedWord": "נשמר",
+    "toastNeedSig": "העלה חתימה תחילה",
+    "toastNeedStamp": "העלה חותמת תחילה",
+    "toastAddedPages": "נוסף ל-{n} עמודים",
+    "pagePrefix": "עמוד",
+    "unitMm": "מ\"מ",
+    "exportSigCount": "חתימות:",
+    "exportStampCount": "חותמות:",
+    "exportPageCount": "עמודים במסמך:",
+    "exportProgress": "עמוד {n}/{total}…",
+    "downloadFilePrefix": "hatum_",
+    "toastPdfSaved": "ה-PDF נשמר — השכבות מוזגו!",
+    "toastError": "שגיאה: ",
+    "btnDownloadPdf": "⬇️ הורדת PDF",
+    "processedDefaultName": "מעובד",
+    "toastBgRemoved": "הרקע הוסר! התמונה נשמרה.",
+    "origLabel": "מקורי",
+    "resultLabel": "תוצאה",
+    "toastLoadedFromMemory": "החתימה והחותמת נטענו מהזיכרון",
+    "orDivider": "או",
+    "btnTakePhoto": "📷 מצלמה",
+    "btnGallery": "🖼 גלריה",
+    "docPhotosHint": "עמודים שנסרקו:",
+    "btnAddPage": "➕ הוסף עמוד",
+    "btnDocPhotosDone": "✅ סיום — צור PDF",
+    "scannedDocName": "מסמך סרוק"
+  },
+  "vi": {
+    "navDoc": "Tài liệu",
+    "navEditor": "Trình chỉnh sửa",
+    "navPlacement": "Vị trí",
+    "navSave": "Lưu",
+    "cardDocTitle": "Tài liệu PDF",
+    "cardSigTitle": "Chữ ký",
+    "cardStampTitle": "Con dấu",
+    "cardExportTitle": "Tải PDF",
+    "uploadPdfTitle": "Chọn PDF",
+    "uploadPdfSub": "Chạm hoặc thả tệp",
+    "btnPlaceSignatures": "Đặt chữ ký",
+    "uploadImgTitle": "PNG nền trong suốt",
+    "uploadImgSub": "hoặc xử lý ảnh bên dưới",
+    "btnProcessUpload": "✨ Tải ảnh và xoá nền",
+    "btnProcessReplace": "✨ Thay thế / chỉnh sửa",
+    "labelWidthMm": "Chiều rộng (mm)",
+    "labelHeightMm": "Chiều cao (mm)",
+    "labelSizeMm": "Kích thước (mm)",
+    "modeSig": "✍️ Chữ ký",
+    "modeStamp": "🔵 Con dấu",
+    "modeBoth": "✍️+🔵 Cả hai",
+    "applyAll": "Mọi trang",
+    "emptyPlacementTitle": "Chưa có vị trí",
+    "emptyPlacementText": "Mở tài liệu và chạm vào trang để đặt chữ ký hoặc con dấu",
+    "btnClearAll": "🗑 Xoá tất cả",
+    "exportDescHtml": "Tất cả các lớp sẽ được gộp lại.<br>Chữ ký và con dấu sẽ trở thành một phần của tài liệu.",
+    "emptyExportTitle": "Chưa sẵn sàng",
+    "emptyExportText": "Tải lên PDF, chữ ký hoặc con dấu, sau đó đặt chúng lên các trang",
+    "modalBgTitle": "✨ Xoá nền ảnh",
+    "modalBgSub": "Tải lên ảnh chữ ký hoặc con dấu — ứng dụng sẽ xoá nền và lưu thành PNG",
+    "tabAuto": "🪄 Tự động",
+    "tabLight": "☀️ Nền sáng",
+    "tabDark": "🌑 Nền tối",
+    "sliderThreshold": "Ngưỡng xoá",
+    "sliderThresholdHint": "Thấp hơn — chỉ xoá nền. Cao hơn — bắt nhiều điểm ảnh hơn.",
+    "sliderFeather": "Làm mềm viền",
+    "btnChoosePhoto": "📁 Chọn ảnh",
+    "btnCancel": "Hủy",
+    "btnUse": "✅ Sử dụng",
+    "langPickerTitle": "Ngôn ngữ",
+    "langPickerSub": "Chọn ngôn ngữ giao diện",
+    "installTitle": "Cài đặt ứng dụng",
+    "exportTitle": "Tải PDF",
+    "tagline": "Chữ ký và con dấu trên PDF",
+    "noFileChosen": "chưa chọn tệp",
+    "toastLoadingDoc": "Đang tải tài liệu…",
+    "toastPdfError": "Lỗi tải PDF: ",
+    "toastDocLoaded": "Đã tải tài liệu",
+    "savedSuffix": "✓ đã lưu",
+    "toastUploadedSaved": "Đã tải lên và lưu",
+    "savedWord": "đã lưu",
+    "toastNeedSig": "Hãy tải chữ ký lên trước",
+    "toastNeedStamp": "Hãy tải con dấu lên trước",
+    "toastAddedPages": "Đã thêm vào {n} trang",
+    "pagePrefix": "Trang",
+    "unitMm": "mm",
+    "exportSigCount": "Chữ ký:",
+    "exportStampCount": "Con dấu:",
+    "exportPageCount": "Số trang trong tài liệu:",
+    "exportProgress": "Trang {n}/{total}…",
+    "downloadFilePrefix": "da_ky_",
+    "toastPdfSaved": "Đã lưu PDF — các lớp đã được gộp!",
+    "toastError": "Lỗi: ",
+    "btnDownloadPdf": "⬇️ Tải PDF",
+    "processedDefaultName": "đã xử lý",
+    "toastBgRemoved": "Đã xoá nền! Đã lưu ảnh.",
+    "origLabel": "Bản gốc",
+    "resultLabel": "Kết quả",
+    "toastLoadedFromMemory": "Đã tải chữ ký và con dấu từ bộ nhớ",
+    "orDivider": "hoặc",
+    "btnTakePhoto": "📷 Máy ảnh",
+    "btnGallery": "🖼 Thư viện",
+    "docPhotosHint": "Số trang đã quét:",
+    "btnAddPage": "➕ Thêm trang",
+    "btnDocPhotosDone": "✅ Xong — tạo PDF",
+    "scannedDocName": "Tài liệu đã quét"
+  },
+  "th": {
+    "navDoc": "เอกสาร",
+    "navEditor": "ตัวแก้ไข",
+    "navPlacement": "การจัดวาง",
+    "navSave": "บันทึก",
+    "cardDocTitle": "เอกสาร PDF",
+    "cardSigTitle": "ลายเซ็น",
+    "cardStampTitle": "ตราประทับ",
+    "cardExportTitle": "ดาวน์โหลด PDF",
+    "uploadPdfTitle": "เลือก PDF",
+    "uploadPdfSub": "แตะหรือวางไฟล์",
+    "btnPlaceSignatures": "วางลายเซ็น",
+    "uploadImgTitle": "PNG พื้นหลังโปร่งใส",
+    "uploadImgSub": "หรือประมวลผลรูปด้านล่าง",
+    "btnProcessUpload": "✨ อัปโหลดรูปและลบพื้นหลัง",
+    "btnProcessReplace": "✨ แทนที่ / แก้ไข",
+    "labelWidthMm": "ความกว้าง (มม.)",
+    "labelHeightMm": "ความสูง (มม.)",
+    "labelSizeMm": "ขนาด (มม.)",
+    "modeSig": "✍️ ลายเซ็น",
+    "modeStamp": "🔵 ตราประทับ",
+    "modeBoth": "✍️+🔵 ทั้งสอง",
+    "applyAll": "ทุกหน้า",
+    "emptyPlacementTitle": "ยังไม่มีการจัดวาง",
+    "emptyPlacementText": "เปิดเอกสารแล้วแตะที่หน้าเพื่อวางลายเซ็นหรือตราประทับ",
+    "btnClearAll": "🗑 ล้างทั้งหมด",
+    "exportDescHtml": "เลเยอร์ทั้งหมดจะถูกรวมกัน.<br>ลายเซ็นและตราประทับจะกลายเป็นส่วนหนึ่งของเอกสาร",
+    "emptyExportTitle": "ยังไม่พร้อม",
+    "emptyExportText": "อัปโหลด PDF ลายเซ็น หรือตราประทับ แล้ววางลงบนหน้าต่างๆ",
+    "modalBgTitle": "✨ ลบพื้นหลังรูปภาพ",
+    "modalBgSub": "อัปโหลดรูปลายเซ็นหรือตราประทับ — แอปจะลบพื้นหลังและบันทึกเป็น PNG",
+    "tabAuto": "🪄 อัตโนมัติ",
+    "tabLight": "☀️ พื้นหลังสว่าง",
+    "tabDark": "🌑 พื้นหลังเข้ม",
+    "sliderThreshold": "เกณฑ์การลบ",
+    "sliderThresholdHint": "ต่ำ — เฉพาะพื้นหลัง สูง — จับพิกเซลมากขึ้น",
+    "sliderFeather": "ทำให้ขอบนุ่มนวล",
+    "btnChoosePhoto": "📁 เลือกรูปภาพ",
+    "btnCancel": "ยกเลิก",
+    "btnUse": "✅ ใช้",
+    "langPickerTitle": "ภาษา",
+    "langPickerSub": "เลือกภาษาของอินเทอร์เฟซ",
+    "installTitle": "ติดตั้งแอป",
+    "exportTitle": "ดาวน์โหลด PDF",
+    "tagline": "ลายเซ็นและตราประทับบน PDF",
+    "noFileChosen": "ยังไม่ได้เลือกไฟล์",
+    "toastLoadingDoc": "กำลังโหลดเอกสาร…",
+    "toastPdfError": "เกิดข้อผิดพลาดในการโหลด PDF: ",
+    "toastDocLoaded": "โหลดเอกสารแล้ว",
+    "savedSuffix": "✓ บันทึกแล้ว",
+    "toastUploadedSaved": "อัปโหลดและบันทึกแล้ว",
+    "savedWord": "บันทึกแล้ว",
+    "toastNeedSig": "กรุณาอัปโหลดลายเซ็นก่อน",
+    "toastNeedStamp": "กรุณาอัปโหลดตราประทับก่อน",
+    "toastAddedPages": "เพิ่มลงใน {n} หน้าแล้ว",
+    "pagePrefix": "หน้า",
+    "unitMm": "มม.",
+    "exportSigCount": "ลายเซ็น:",
+    "exportStampCount": "ตราประทับ:",
+    "exportPageCount": "จำนวนหน้าในเอกสาร:",
+    "exportProgress": "หน้า {n}/{total}…",
+    "downloadFilePrefix": "ledsen_",
+    "toastPdfSaved": "บันทึก PDF แล้ว — รวมเลเยอร์เรียบร้อย!",
+    "toastError": "ข้อผิดพลาด: ",
+    "btnDownloadPdf": "⬇️ ดาวน์โหลด PDF",
+    "processedDefaultName": "ประมวลผลแล้ว",
+    "toastBgRemoved": "ลบพื้นหลังแล้ว! บันทึกรูปภาพแล้ว",
+    "origLabel": "ต้นฉบับ",
+    "resultLabel": "ผลลัพธ์",
+    "toastLoadedFromMemory": "โหลดลายเซ็นและตราประทับจากหน่วยความจำแล้ว",
+    "orDivider": "หรือ",
+    "btnTakePhoto": "📷 กล้อง",
+    "btnGallery": "🖼 แกลเลอรี",
+    "docPhotosHint": "หน้าที่สแกน:",
+    "btnAddPage": "➕ เพิ่มหน้า",
+    "btnDocPhotosDone": "✅ เสร็จสิ้น — สร้าง PDF",
+    "scannedDocName": "เอกสารที่สแกน"
+  },
+  "id": {
+    "navDoc": "Dokumen",
+    "navEditor": "Editor",
+    "navPlacement": "Penempatan",
+    "navSave": "Simpan",
+    "cardDocTitle": "Dokumen PDF",
+    "cardSigTitle": "Tanda tangan",
+    "cardStampTitle": "Stempel",
+    "cardExportTitle": "Unduh PDF",
+    "uploadPdfTitle": "Pilih PDF",
+    "uploadPdfSub": "Ketuk atau jatuhkan file",
+    "btnPlaceSignatures": "Tempatkan tanda tangan",
+    "uploadImgTitle": "PNG dengan latar belakang transparan",
+    "uploadImgSub": "atau proses foto di bawah",
+    "btnProcessUpload": "✨ Unggah foto dan hapus latar belakang",
+    "btnProcessReplace": "✨ Ganti / proses",
+    "labelWidthMm": "Lebar (mm)",
+    "labelHeightMm": "Tinggi (mm)",
+    "labelSizeMm": "Ukuran (mm)",
+    "modeSig": "✍️ Tanda tangan",
+    "modeStamp": "🔵 Stempel",
+    "modeBoth": "✍️+🔵 Keduanya",
+    "applyAll": "Semua halaman",
+    "emptyPlacementTitle": "Belum ada penempatan",
+    "emptyPlacementText": "Buka dokumen dan ketuk halaman untuk menempatkan tanda tangan atau stempel",
+    "btnClearAll": "🗑 Hapus semua",
+    "exportDescHtml": "Semua lapisan akan digabungkan.<br>Tanda tangan dan stempel menjadi bagian dari dokumen.",
+    "emptyExportTitle": "Belum siap",
+    "emptyExportText": "Unggah PDF, tanda tangan, atau stempel, lalu tempatkan pada halaman",
+    "modalBgTitle": "✨ Hapus latar belakang foto",
+    "modalBgSub": "Unggah foto tanda tangan atau stempel — aplikasi akan menghapus latar belakang dan menyimpan PNG",
+    "tabAuto": "🪄 Otomatis",
+    "tabLight": "☀️ Latar terang",
+    "tabDark": "🌑 Latar gelap",
+    "sliderThreshold": "Ambang penghapusan",
+    "sliderThresholdHint": "Lebih rendah — hanya latar belakang. Lebih tinggi — menangkap lebih banyak piksel.",
+    "sliderFeather": "Penghalusan tepi",
+    "btnChoosePhoto": "📁 Pilih foto",
+    "btnCancel": "Batal",
+    "btnUse": "✅ Gunakan",
+    "langPickerTitle": "Bahasa",
+    "langPickerSub": "Pilih bahasa antarmuka",
+    "installTitle": "Pasang aplikasi",
+    "exportTitle": "Unduh PDF",
+    "tagline": "Tanda tangan dan stempel pada PDF",
+    "noFileChosen": "belum ada file dipilih",
+    "toastLoadingDoc": "Memuat dokumen…",
+    "toastPdfError": "Gagal memuat PDF: ",
+    "toastDocLoaded": "Dokumen dimuat",
+    "savedSuffix": "✓ tersimpan",
+    "toastUploadedSaved": "Diunggah dan disimpan",
+    "savedWord": "tersimpan",
+    "toastNeedSig": "Unggah tanda tangan terlebih dahulu",
+    "toastNeedStamp": "Unggah stempel terlebih dahulu",
+    "toastAddedPages": "Ditambahkan ke {n} halaman",
+    "pagePrefix": "Hal.",
+    "unitMm": "mm",
+    "exportSigCount": "Tanda tangan:",
+    "exportStampCount": "Stempel:",
+    "exportPageCount": "Halaman dalam dokumen:",
+    "exportProgress": "Halaman {n}/{total}…",
+    "downloadFilePrefix": "ditandatangani_",
+    "toastPdfSaved": "PDF disimpan — lapisan digabungkan!",
+    "toastError": "Kesalahan: ",
+    "btnDownloadPdf": "⬇️ Unduh PDF",
+    "processedDefaultName": "diproses",
+    "toastBgRemoved": "Latar belakang dihapus! Gambar disimpan.",
+    "origLabel": "Asli",
+    "resultLabel": "Hasil",
+    "toastLoadedFromMemory": "Tanda tangan dan stempel dimuat dari memori",
+    "orDivider": "atau",
+    "btnTakePhoto": "📷 Kamera",
+    "btnGallery": "🖼 Galeri",
+    "docPhotosHint": "Halaman dipindai:",
+    "btnAddPage": "➕ Tambah halaman",
+    "btnDocPhotosDone": "✅ Selesai — buat PDF",
+    "scannedDocName": "Dokumen yang dipindai"
+  },
+  "ro": {
+    "navDoc": "Document",
+    "navEditor": "Editor",
+    "navPlacement": "Plasare",
+    "navSave": "Salvează",
+    "cardDocTitle": "Document PDF",
+    "cardSigTitle": "Semnătură",
+    "cardStampTitle": "Ștampilă",
+    "cardExportTitle": "Descarcă PDF",
+    "uploadPdfTitle": "Alege PDF",
+    "uploadPdfSub": "Atinge sau plasează un fișier",
+    "btnPlaceSignatures": "Plasează semnăturile",
+    "uploadImgTitle": "PNG cu fundal transparent",
+    "uploadImgSub": "sau procesează o fotografie mai jos",
+    "btnProcessUpload": "✨ Încarcă foto și elimină fundalul",
+    "btnProcessReplace": "✨ Înlocuiește / editează",
+    "labelWidthMm": "Lățime (mm)",
+    "labelHeightMm": "Înălțime (mm)",
+    "labelSizeMm": "Dimensiune (mm)",
+    "modeSig": "✍️ Semnătură",
+    "modeStamp": "🔵 Ștampilă",
+    "modeBoth": "✍️+🔵 Ambele",
+    "applyAll": "Toate paginile",
+    "emptyPlacementTitle": "Nicio plasare",
+    "emptyPlacementText": "Deschideți un document și atingeți pagina pentru a plasa o semnătură sau o ștampilă",
+    "btnClearAll": "🗑 Șterge tot",
+    "exportDescHtml": "Toate straturile vor fi îmbinate.<br>Semnăturile și ștampilele vor deveni parte din document.",
+    "emptyExportTitle": "Neterminat",
+    "emptyExportText": "Încarcă un PDF, o semnătură sau o ștampilă, apoi plasează-le pe pagini",
+    "modalBgTitle": "✨ Elimină fundalul din fotografie",
+    "modalBgSub": "Încarcă o fotografie a semnăturii sau ștampilei — aplicația va elimina fundalul și va salva un PNG",
+    "tabAuto": "🪄 Automat",
+    "tabLight": "☀️ Fundal deschis",
+    "tabDark": "🌑 Fundal închis",
+    "sliderThreshold": "Prag de eliminare",
+    "sliderThresholdHint": "Mai mic — doar fundalul. Mai mare — surprinde mai mulți pixeli.",
+    "sliderFeather": "Estompare margini",
+    "btnChoosePhoto": "📁 Alege o fotografie",
+    "btnCancel": "Anulează",
+    "btnUse": "✅ Folosește",
+    "langPickerTitle": "Limbă",
+    "langPickerSub": "Alege limba interfeței",
+    "installTitle": "Instalează aplicația",
+    "exportTitle": "Descarcă PDF",
+    "tagline": "Semnătură și ștampilă pe PDF",
+    "noFileChosen": "niciun fișier ales",
+    "toastLoadingDoc": "Se încarcă documentul…",
+    "toastPdfError": "Eroare la încărcarea PDF-ului: ",
+    "toastDocLoaded": "Document încărcat",
+    "savedSuffix": "✓ salvat",
+    "toastUploadedSaved": "Încărcat și salvat",
+    "savedWord": "salvat",
+    "toastNeedSig": "Încarcă mai întâi o semnătură",
+    "toastNeedStamp": "Încarcă mai întâi o ștampilă",
+    "toastAddedPages": "Adăugat la {n} pagini",
+    "pagePrefix": "Pag.",
+    "unitMm": "mm",
+    "exportSigCount": "Semnături:",
+    "exportStampCount": "Ștampile:",
+    "exportPageCount": "Pagini în document:",
+    "exportProgress": "Pagina {n}/{total}…",
+    "downloadFilePrefix": "semnat_",
+    "toastPdfSaved": "PDF salvat — straturi îmbinate!",
+    "toastError": "Eroare: ",
+    "btnDownloadPdf": "⬇️ Descarcă PDF",
+    "processedDefaultName": "procesat",
+    "toastBgRemoved": "Fundal eliminat! Imagine salvată.",
+    "origLabel": "Original",
+    "resultLabel": "Rezultat",
+    "toastLoadedFromMemory": "Semnătura și ștampila au fost încărcate din memorie",
+    "orDivider": "sau",
+    "btnTakePhoto": "📷 Cameră",
+    "btnGallery": "🖼 Galerie",
+    "docPhotosHint": "Pagini scanate:",
+    "btnAddPage": "➕ Adaugă pagină",
+    "btnDocPhotosDone": "✅ Gata — creează PDF",
+    "scannedDocName": "Document scanat"
+  },
+  "kk": {
+    "navDoc": "Құжат",
+    "navEditor": "Редактор",
+    "navPlacement": "Орналастыру",
+    "navSave": "Сақтау",
+    "cardDocTitle": "PDF құжаты",
+    "cardSigTitle": "Қолтаңба",
+    "cardStampTitle": "Мөр",
+    "cardExportTitle": "PDF жүктеу",
+    "uploadPdfTitle": "PDF таңдау",
+    "uploadPdfSub": "Түртіңіз немесе файлды тастаңыз",
+    "btnPlaceSignatures": "Қолтаңбаларды орналастыру",
+    "uploadImgTitle": "Мөлдір фонды PNG",
+    "uploadImgSub": "немесе төмендегі суретті өңдеңіз",
+    "btnProcessUpload": "✨ Суретті жүктеп, фонды өшіру",
+    "btnProcessReplace": "✨ Ауыстыру / өңдеу",
+    "labelWidthMm": "Ені (мм)",
+    "labelHeightMm": "Биіктігі (мм)",
+    "labelSizeMm": "Өлшемі (мм)",
+    "modeSig": "✍️ Қолтаңба",
+    "modeStamp": "🔵 Мөр",
+    "modeBoth": "✍️+🔵 Екеуі де",
+    "applyAll": "Барлық беттер",
+    "emptyPlacementTitle": "Орналастыру жоқ",
+    "emptyPlacementText": "Құжатты ашып, қолтаңба немесе мөр қою үшін бетті түртіңіз",
+    "btnClearAll": "🗑 Барлығын тазарту",
+    "exportDescHtml": "Барлық қабаттар біріктіріледі.<br>Қолтаңбалар мен мөрлер құжаттың бөлігіне айналады.",
+    "emptyExportTitle": "Дайын емес",
+    "emptyExportText": "PDF, қолтаңба немесе мөрді жүктеп, оларды беттерге орналастырыңыз",
+    "modalBgTitle": "✨ Суреттің фонын өшіру",
+    "modalBgSub": "Қолтаңба немесе мөрдің суретін жүктеңіз — қолданба фонды өшіріп, PNG етіп сақтайды",
+    "tabAuto": "🪄 Авто",
+    "tabLight": "☀️ Ашық фон",
+    "tabDark": "🌑 Қараңғы фон",
+    "sliderThreshold": "Жою шегі",
+    "sliderThresholdHint": "Аз болса — тек фон. Көп болса — көбірек пиксельді қамтиды.",
+    "sliderFeather": "Жиектерді жұмсарту",
+    "btnChoosePhoto": "📁 Суретті таңдау",
+    "btnCancel": "Бас тарту",
+    "btnUse": "✅ Пайдалану",
+    "langPickerTitle": "Тіл",
+    "langPickerSub": "Интерфейс тілін таңдаңыз",
+    "installTitle": "Қолданбаны орнату",
+    "exportTitle": "PDF жүктеу",
+    "tagline": "PDF-те қолтаңба мен мөр",
+    "noFileChosen": "файл таңдалмаған",
+    "toastLoadingDoc": "Құжат жүктелуде…",
+    "toastPdfError": "PDF жүктеу қатесі: ",
+    "toastDocLoaded": "Құжат жүктелді",
+    "savedSuffix": "✓ сақталды",
+    "toastUploadedSaved": "Жүктелді және сақталды",
+    "savedWord": "сақталды",
+    "toastNeedSig": "Алдымен қолтаңбаны жүктеңіз",
+    "toastNeedStamp": "Алдымен мөрді жүктеңіз",
+    "toastAddedPages": "{n} betке қосылды",
+    "pagePrefix": "Бет",
+    "unitMm": "мм",
+    "exportSigCount": "Қолтаңбалар:",
+    "exportStampCount": "Мөрлер:",
+    "exportPageCount": "Құжаттағы беттер:",
+    "exportProgress": "{n}/{total} бет…",
+    "downloadFilePrefix": "qoltanba_",
+    "toastPdfSaved": "PDF сақталды — қабаттар біріктірілді!",
+    "toastError": "Қате: ",
+    "btnDownloadPdf": "⬇️ PDF жүктеу",
+    "processedDefaultName": "өңделген",
+    "toastBgRemoved": "Фон өшірілді! Сурет сақталды.",
+    "origLabel": "Түпнұсқа",
+    "resultLabel": "Нәтиже",
+    "toastLoadedFromMemory": "Қолтаңба мен мөр жадтан жүктелді",
+    "orDivider": "немесе",
+    "btnTakePhoto": "📷 Камера",
+    "btnGallery": "🖼 Галерея",
+    "docPhotosHint": "Сканерленген беттер:",
+    "btnAddPage": "➕ Бет қосу",
+    "btnDocPhotosDone": "✅ Дайын — PDF жасау",
+    "scannedDocName": "Сканерленген құжат"
+  }
+};
+const LANGS = [
+  {
+    "code": "ru",
+    "name": "Русский",
+    "flag": "🇷🇺"
+  },
+  {
+    "code": "en",
+    "name": "English",
+    "flag": "🇬🇧"
+  },
+  {
+    "code": "fr",
+    "name": "Français",
+    "flag": "🇫🇷"
+  },
+  {
+    "code": "de",
+    "name": "Deutsch",
+    "flag": "🇩🇪"
+  },
+  {
+    "code": "es",
+    "name": "Español",
+    "flag": "🇪🇸"
+  },
+  {
+    "code": "it",
+    "name": "Italiano",
+    "flag": "🇮🇹"
+  },
+  {
+    "code": "pt",
+    "name": "Português",
+    "flag": "🇵🇹"
+  },
+  {
+    "code": "uk",
+    "name": "Українська",
+    "flag": "🇺🇦"
+  },
+  {
+    "code": "pl",
+    "name": "Polski",
+    "flag": "🇵🇱"
+  },
+  {
+    "code": "tr",
+    "name": "Türkçe",
+    "flag": "🇹🇷"
+  },
+  {
+    "code": "ar",
+    "name": "العربية",
+    "flag": "🇸🇦"
+  },
+  {
+    "code": "zh",
+    "name": "中文",
+    "flag": "🇨🇳"
+  },
+  {
+    "code": "ja",
+    "name": "日本語",
+    "flag": "🇯🇵"
+  },
+  {
+    "code": "ko",
+    "name": "한국어",
+    "flag": "🇰🇷"
+  },
+  {
+    "code": "hi",
+    "name": "हिन्दी",
+    "flag": "🇮🇳"
+  },
+  {
+    "code": "nl",
+    "name": "Nederlands",
+    "flag": "🇳🇱"
+  },
+  {
+    "code": "sv",
+    "name": "Svenska",
+    "flag": "🇸🇪"
+  },
+  {
+    "code": "cs",
+    "name": "Čeština",
+    "flag": "🇨🇿"
+  },
+  {
+    "code": "el",
+    "name": "Ελληνικά",
+    "flag": "🇬🇷"
+  },
+  {
+    "code": "he",
+    "name": "עברית",
+    "flag": "🇮🇱"
+  },
+  {
+    "code": "vi",
+    "name": "Tiếng Việt",
+    "flag": "🇻🇳"
+  },
+  {
+    "code": "th",
+    "name": "ไทย",
+    "flag": "🇹🇭"
+  },
+  {
+    "code": "id",
+    "name": "Bahasa Indonesia",
+    "flag": "🇮🇩"
+  },
+  {
+    "code": "ro",
+    "name": "Română",
+    "flag": "🇷🇴"
+  },
+  {
+    "code": "kk",
+    "name": "Қазақша",
+    "flag": "🇰🇿"
+  }
+];
+const RTL_LANGS = ['ar','he'];
+
+function tr(key, vars){
+  const dict = I18N[currentLang] || I18N.ru;
+  let s = (dict && dict[key] !== undefined) ? dict[key] : ((I18N.ru[key] !== undefined) ? I18N.ru[key] : key);
+  if (vars) Object.keys(vars).forEach(k => { s = s.replace('{' + k + '}', vars[k]); });
+  return s;
+}
+
+function applyLanguage(lang){
+  if (!I18N[lang]) lang = 'ru';
+  currentLang = lang;
+  try { localStorage.setItem(LS.LANG, lang); } catch(e) {}
+  document.documentElement.lang = lang;
+  document.documentElement.dir = RTL_LANGS.includes(lang) ? 'rtl' : 'ltr';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const val = tr(key);
+    if (el.hasAttribute('data-i18n-html')) el.innerHTML = val;
+    else el.textContent = val;
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    el.title = tr(el.getAttribute('data-i18n-title'));
+  });
+
+  if (!pdfDoc) {
+    const hs = document.getElementById('headerSub');
+    if (hs) hs.textContent = tr('tagline');
+  }
+  if (!procFileChosen) {
+    const pf = document.getElementById('procFileName');
+    if (pf) pf.textContent = tr('noFileChosen');
+  }
+
+  renderLangList();
+  updateListScreen();
+  updateExportScreen();
+
+  const flagEl = document.getElementById('langBtnFlag');
+  if (flagEl) {
+    const cur = LANGS.find(l => l.code === lang);
+    flagEl.textContent = cur ? cur.flag : '🌐';
+  }
+}
+
+function renderLangList(){
+  const wrap = document.getElementById('langList');
+  if (!wrap) return;
+  wrap.innerHTML = LANGS.map(l => `
+    <button class="lang-item${l.code === currentLang ? ' active' : ''}" onclick="selectLanguage('${l.code}')">
+      <span class="li-flag">${l.flag}</span>
+      <span class="li-name">${l.name}</span>
+      ${l.code === currentLang ? '<span class="li-check">✓</span>' : ''}
+    </button>
+  `).join('');
+}
+
+function openLangModal(){
+  renderLangList();
+  document.getElementById('langModal').classList.add('open');
+}
+function closeLangModal(){
+  document.getElementById('langModal').classList.remove('open');
+}
+function selectLanguage(code){
+  applyLanguage(code);
+  closeLangModal();
+}
+
 
 // ── UTILS ──
 function toast(msg,type=''){
@@ -510,7 +2721,7 @@ function dataUrlToU8(d){
 function saveLS(k,nk,d,n){try{localStorage.setItem(k,d);localStorage.setItem(nk,n)}catch(e){}}
 function loadLS(k,nk,type){
   const d=localStorage.getItem(k); if(!d)return;
-  const n=localStorage.getItem(nk)||'сохранено';
+  const n=localStorage.getItem(nk)||tr('savedWord');
   applyImg(type,d,n+' ✓');
 }
 
@@ -532,28 +2743,102 @@ function switchTab(tab){
 function goToViewer(){switchTab('viewer')}
 
 // ── PDF LOAD ──
-document.getElementById('pdfInput').addEventListener('change',async e=>{
-  const f=e.target.files[0]; if(!f)return;
-  toast('Загружаю документ…');
-  const raw=new Uint8Array(await f.arrayBuffer());
+async function loadPdfFromBytes(raw,name){
+  toast(tr('toastLoadingDoc'));
   pdfBytes=raw;
   try{ pdfDoc=await pdfjsLib.getDocument({data:raw.slice()}).promise; }
-  catch(err){ toast('Ошибка загрузки PDF: '+err.message,'error'); return; }
+  catch(err){ toast(tr('toastPdfError')+err.message,'error'); return false; }
   totalPages=pdfDoc.numPages; currentPage=1; placements=[];
-  document.getElementById('pdfName').textContent=f.name;
-  document.getElementById('pdfMeta').textContent=(f.size/1024).toFixed(0)+' KB · '+totalPages+' стр.';
+  document.getElementById('pdfName').textContent=name;
+  document.getElementById('pdfMeta').textContent=(raw.length/1024).toFixed(0)+' KB · '+totalPages+' стр.';
   document.getElementById('docEmpty').style.display='none';
   document.getElementById('docLoaded').style.display='block';
-  document.getElementById('headerSub').textContent=f.name;
+  document.getElementById('headerSub').textContent=name;
   updateBadge(); updateExportBtn();
-  toast('Документ загружен','success');
+  toast(tr('toastDocLoaded'),'success');
+  return true;
+}
+
+document.getElementById('pdfInput').addEventListener('change',async e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const raw=new Uint8Array(await f.arrayBuffer());
+  await loadPdfFromBytes(raw,f.name);
 });
+
+// ── DOCUMENT: PHOTOGRAPH / SCAN ──
+let docPhotos=[];
+function startDocCamera(){document.getElementById('docCamInput').click();}
+function startDocGallery(){document.getElementById('docGalleryInput').click();}
+function handleDocPhotoInput(e){
+  const files=Array.from(e.target.files||[]); if(!files.length)return;
+  let pending=files.length;
+  files.forEach(f=>{
+    const r=new FileReader();
+    r.onload=ev=>{ docPhotos.push(ev.target.result); if(--pending===0) renderDocPhotos(); };
+    r.readAsDataURL(f);
+  });
+  e.target.value='';
+}
+document.getElementById('docCamInput').addEventListener('change',handleDocPhotoInput);
+document.getElementById('docGalleryInput').addEventListener('change',handleDocPhotoInput);
+
+function renderDocPhotos(){
+  const wrap=document.getElementById('docPhotoStage');
+  const strip=document.getElementById('docPhotoStrip');
+  if(docPhotos.length===0){ wrap.style.display='none'; strip.innerHTML=''; return; }
+  wrap.style.display='block';
+  strip.innerHTML=docPhotos.map((d,i)=>`
+    <div class="dp-thumb">
+      <img src="${d}">
+      <span class="dp-num">${i+1}</span>
+      <button class="dp-del" onclick="removeDocPhoto(${i})">✕</button>
+    </div>
+  `).join('');
+  document.getElementById('docPhotoCount').textContent=docPhotos.length;
+}
+function removeDocPhoto(i){ docPhotos.splice(i,1); renderDocPhotos(); }
+function clearDocPhotos(){ docPhotos=[]; renderDocPhotos(); }
+
+async function normalizePhoto(dataUrl,maxDim){
+  const img=await loadImageElement(dataUrl);
+  let w=img.width,h=img.height;
+  if(Math.max(w,h)>maxDim){ const s=maxDim/Math.max(w,h); w=Math.round(w*s); h=Math.round(h*s); }
+  const c=document.createElement('canvas'); c.width=w; c.height=h;
+  c.getContext('2d').drawImage(img,0,0,w,h);
+  return {dataUrl:c.toDataURL('image/jpeg',0.92),w,h};
+}
+
+async function buildPdfFromPhotos(dataUrls){
+  const {PDFDocument}=PDFLib;
+  const doc=await PDFDocument.create();
+  const PT_PER_PX=72/150;
+  for(const durl of dataUrls){
+    const norm=await normalizePhoto(durl,2000);
+    const emb=await doc.embedJpg(dataUrlToU8(norm.dataUrl));
+    const pw=norm.w*PT_PER_PX, ph=norm.h*PT_PER_PX;
+    const page=doc.addPage([pw,ph]);
+    page.drawImage(emb,{x:0,y:0,width:pw,height:ph});
+  }
+  return await doc.save();
+}
+
+async function finishDocPhotos(){
+  if(!docPhotos.length)return;
+  const btn=document.getElementById('docPhotoDoneBtn');
+  btn.classList.add('loading'); btn.disabled=true;
+  try{
+    const bytes=await buildPdfFromPhotos(docPhotos);
+    const ok=await loadPdfFromBytes(bytes, tr('scannedDocName')+'.pdf');
+    if(ok){ docPhotos=[]; renderDocPhotos(); }
+  }catch(err){ toast(tr('toastError')+err.message,'error'); console.error(err); }
+  btn.classList.remove('loading'); btn.disabled=false;
+}
 
 function clearPdf(){
   pdfDoc=null;pdfBytes=null;placements=[];currentPage=1;totalPages=1;
   document.getElementById('docEmpty').style.display='block';
   document.getElementById('docLoaded').style.display='none';
-  document.getElementById('headerSub').textContent='Подпись и печать на PDF';
+  document.getElementById('headerSub').textContent=tr('tagline');
   document.getElementById('pdfInput').value='';
   updateBadge(); updateExportBtn(); updateListScreen();
 }
@@ -582,8 +2867,8 @@ function loadImgFile(inputId,type){
   r.onload=e=>{
     const d=e.target.result;
     saveLS(type==='sig'?LS.SIG:LS.STMP, type==='sig'?LS.SIGN:LS.STMPN, d, f.name);
-    applyImg(type,d,f.name+' ✓ сохранено');
-    toast('Загружено и сохранено','success');
+    applyImg(type,d,f.name+' '+tr('savedSuffix'));
+    toast(tr('toastUploadedSaved'),'success');
   };
   r.readAsDataURL(f);
 }
@@ -663,19 +2948,19 @@ function handleCanvasClick(e){
   const allPages=document.getElementById('applyAllPages').checked;
   const pages=allPages?Array.from({length:totalPages},(_,i)=>i+1):[currentPage];
   if(mode==='sig'||mode==='both'){
-    if(!sigDataUrl){toast('Сначала загрузите подпись','error');return}
+    if(!sigDataUrl){toast(tr('toastNeedSig'),'error');return}
     const wMm=parseFloat(document.getElementById('sigW').value);
     const hMm=parseFloat(document.getElementById('sigH').value);
     pages.forEach(pg=>placements.push({type:'sig',page:pg,xPct:pos.x,yPct:pos.y,wMm,hMm,id:++placementIdCounter}));
   }
   if(mode==='stmp'||mode==='both'){
-    if(!stmpDataUrl){toast('Сначала загрузите печать','error');return}
+    if(!stmpDataUrl){toast(tr('toastNeedStamp'),'error');return}
     const sz=parseFloat(document.getElementById('stmpSize').value);
     const ox=mode==='both'?0.04:0;
     pages.forEach(pg=>placements.push({type:'stmp',page:pg,xPct:pos.x+ox,yPct:pos.y,wMm:sz,hMm:sz,id:++placementIdCounter}));
   }
   renderPlacements(); updateBadge(); updateExportBtn();
-  if(allPages)toast('Добавлено на '+pages.length+' страниц','success');
+  if(allPages)toast(tr('toastAddedPages',{n:pages.length}),'success');
 }
 
 function renderPlacements(){
@@ -760,8 +3045,8 @@ function updateListScreen(){
       <div class="pl-item">
         <div class="pi-icon">${p.type==='sig'?'✍️':'🔵'}</div>
         <div class="pi-info">
-          <span class="pi-page">Стр. ${p.page}</span>
-          <span class="pi-size"> · ${p.wMm}×${p.hMm} мм</span>
+          <span class="pi-page">${tr('pagePrefix')} ${p.page}</span>
+          <span class="pi-size"> · ${p.wMm}×${p.hMm} ${tr('unitMm')}</span>
         </div>
         <button class="pi-del" onclick="removePlacement(${p.id})">✕</button>
       </div>
@@ -792,8 +3077,8 @@ function updateExportScreen(){
   const stC=placements.filter(p=>p.type==='stmp').length;
   document.getElementById('exportSummary').innerHTML=`
     📄 <b>${document.getElementById('pdfName').textContent||'—'}</b><br>
-    ✍️ Подписей: <b>${sigC}</b> &nbsp;·&nbsp; 🔵 Печатей: <b>${stC}</b><br>
-    📃 Страниц в документе: <b>${totalPages}</b>
+    ✍️ ${tr('exportSigCount')} <b>${sigC}</b> &nbsp;·&nbsp; 🔵 ${tr('exportStampCount')} <b>${stC}</b><br>
+    📃 ${tr('exportPageCount')} <b>${totalPages}</b>
   `;
 }
 
@@ -815,7 +3100,7 @@ async function exportPdf(){
     const origPages=origDoc.getPages();
     for(let pn=1;pn<=totalPages;pn++){
       const btnText=btn?.querySelector('.btn-text');
-      if(btnText)btnText.textContent=`Страница ${pn}/${totalPages}…`;
+      if(btnText)btnText.textContent=tr('exportProgress',{n:pn,total:totalPages});
       const pdfPage=await pdfDoc.getPage(pn);
       const vp=pdfPage.getViewport({scale:exportScale});
       const oc=document.createElement('canvas');
@@ -841,25 +3126,25 @@ async function exportPdf(){
     const blob=new Blob([out],{type:'application/pdf'});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
-    a.href=url; a.download='подписан_'+(document.getElementById('pdfName').textContent||'doc.pdf');
+    a.href=url; a.download=tr('downloadFilePrefix')+(document.getElementById('pdfName').textContent||'doc.pdf');
     a.click(); URL.revokeObjectURL(url);
-    toast('PDF сохранён — слои объединены!','success');
-  }catch(err){toast('Ошибка: '+err.message,'error');console.error(err);}
+    toast(tr('toastPdfSaved'),'success');
+  }catch(err){toast(tr('toastError')+err.message,'error');console.error(err);}
   [btn,btnH].forEach(b=>{
     if(b){b.classList.remove('loading');b.disabled=false;
-      const t=b.querySelector('.btn-text');if(t)t.textContent=b===btnH?'💾':'⬇️ Скачать PDF';
+      const bt=b.querySelector('.btn-text');if(bt)bt.textContent=b===btnH?'💾':tr('btnDownloadPdf');
     }
   });
 }
 
 // ── BG REMOVAL ──
-let procTarget='sig',procMode='auto',procThresh=30,procFeather=2;
+let procTarget='sig',procMode='auto',procThresh=30,procFeather=2,procFileChosen=false;
 let procOrig=null,procW=0,procH=0,procReady=false;
 
 function openProcessor(t){
   procTarget=t; procReady=false;
   ['origCanvas','resultCanvas'].forEach(id=>{const c=document.getElementById(id);c.width=200;c.height=100;c.getContext('2d').clearRect(0,0,200,100);});
-  document.getElementById('procFileName').textContent='файл не выбран';
+  document.getElementById('procFileName').textContent=tr('noFileChosen');procFileChosen=false;
   document.getElementById('applyProcBtn').disabled=true;
   document.getElementById('processorModal').classList.add('open');
 }
@@ -875,7 +3160,7 @@ function updateFeather(v){procFeather=+v;document.getElementById('featherVal').t
 
 function loadProcImage(input){
   const f=input.files[0]; if(!f)return;
-  document.getElementById('procFileName').textContent=f.name;
+  document.getElementById('procFileName').textContent=f.name; procFileChosen=true;
   const r=new FileReader();
   r.onload=e=>{
     const img=new Image();
@@ -944,14 +3229,14 @@ function runBgRemove(){
 function applyProcessed(){
   const rc=document.getElementById('resultCanvas'); if(!rc.width)return;
   const d=rc.toDataURL('image/png');
-  const rawName=document.getElementById('procFileName').textContent||'обработанное';
+  const rawName=document.getElementById('procFileName').textContent||tr('processedDefaultName');
   const name=rawName.replace(/\.[^.]+$/,'')+'.png';
   const lsKey=procTarget==='sig'?LS.SIG:LS.STMP;
   const lsNKey=procTarget==='sig'?LS.SIGN:LS.STMPN;
   saveLS(lsKey,lsNKey,d,name);
-  applyImg(procTarget,d,name+' ✓ сохранено');
+  applyImg(procTarget,d,name+' '+tr('savedSuffix'));
   closeProcessor();
-  toast('Фон убран! Изображение сохранено.','success');
+  toast(tr('toastBgRemoved'),'success');
 }
 
 // ── PWA ──
@@ -973,9 +3258,12 @@ if ('serviceWorker' in navigator) {
 
 // ── INIT ──
 window.addEventListener('DOMContentLoaded',()=>{
+  let savedLang='ru';
+  try{savedLang=localStorage.getItem(LS.LANG)||'ru';}catch(e){}
+  applyLanguage(savedLang);
   loadLS(LS.SIG,LS.SIGN,'sig');
   loadLS(LS.STMP,LS.STMPN,'stmp');
-  if(sigDataUrl||stmpDataUrl) toast('Подпись и печать загружены из памяти','success');
+  if(sigDataUrl||stmpDataUrl) toast(tr('toastLoadedFromMemory'),'success');
   // Desktop: show sidebar
   if(window.innerWidth>=700){
     document.getElementById('desktopSidebar').style.display='flex';
@@ -984,8 +3272,6 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 // Resize — re-render
 window.addEventListener('resize',()=>{if(pdfDoc&&activeTab==='viewer')renderPage();});
-
-
 </script>
 </body>
 </html>
